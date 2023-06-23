@@ -264,7 +264,7 @@ function updateSelectedSuppliesTable() {
   }
 
   function generateQRPDF(){
-    fetch('http://localhost:3000/services/generate-pdf-qr', {
+    fetch('https://clinicasanromanv2-production.up.railway.app/services/generate-pdf-qr', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
