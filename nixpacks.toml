@@ -1,31 +1,22 @@
-version = "2"
-
-[packages]
-puppeteer = { nodePackage = "puppeteer" }
-google-chrome-stable = { package = "google-chrome-stable" }
-libxss1 = { package = "libxss1" }
-libgconf-2-4 = { package = "libgconf-2-4" }
-libatk1.0-0 = { package = "libatk1.0-0" }
-libatk-bridge2.0-0 = { package = "libatk-bridge2.0-0" }
-libgtk-3-0 = { package = "libgtk-3-0" }
-libgbm1 = { package = "libgbm1" }
-libnss3 = { package = "libnss3" }
-libx11-xcb1 = { package = "libx11-xcb1" }
-libxcb-dri3-0 = { package = "libxcb-dri3-0" }
-libdrm2 = { package = "libdrm2" }
-libxshmfence1 = { package = "libxshmfence1" }
-
-[scripts.build]
-run = [
-  "npm install"
-]
-
-[scripts.dev]
-run = [
-  "npm run dev"
-]
-
-[scripts.start]
-run = [
-  "npm start"
-]
+[phases.setup]
+  aptPkgs = [
+    'fonts-liberation',
+    'libappindicator3-1',
+    'libasound2',
+    'libatk-bridge2.0-0',
+    'libatk1.0-0',
+    'libgbm1',
+    'libgtk-3-0',
+    'libnspr4',
+    'libnss3',
+    'libx11-xcb1',
+    'libxcomposite1',
+    'libxcursor1',
+    'libxdamage1',
+    'libxfixes3',
+    'libxi6',
+    'libxrandr2',
+    'libxss1',
+    'libxtst6',
+    'xdg-utils'
+    ]
