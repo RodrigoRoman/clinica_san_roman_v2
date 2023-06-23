@@ -504,12 +504,7 @@ module.exports.accountToPDF = async (req,res) =>{
     const chromeOptions = {
         headless: true,
         defaultViewport: null,
-        args: [
-            "--incognito",
-            "--no-sandbox",
-            "--single-process",
-            "--no-zygote"
-        ],
+         args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     };
     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions']});
     const page = await browser.newPage();           // open new tab
