@@ -20,3 +20,8 @@
     'libxtst6',
     'xdg-utils'
     ]
+
+[phases.install]
+script = '''
+npm ci --force
+'''
