@@ -536,7 +536,10 @@ module.exports.searchRefillTrans = async (req, res) => {
           path: 'service patient addedBy',
         },
       })
+    console.log('the current porint from teh searchAll')
+    console.log(currentPoint.servicesCar)
     let transactions = currentPoint.servicesCar;
+    console.log('transactions id')
     let transactionIds = transactions.map(transaction => transaction._id);
 
     if(secondOrderSort != 'serviceData.name'){
@@ -812,7 +815,7 @@ module.exports.accountReportPDF = async (req,res) =>{
     
     // await page.goto(`https://pure-brushlands-42473.herokuapp.com/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
     //     waitUntil: 'networkidle0'}); 
-    await page.goto(`https://clinicasanromanadmin-production.up.railway.app///exits/hospital_account?begin=${begin}&end=${end}&entry=${honorarios}&sorted=${sorted}`,{
+    await page.goto(`https://clinicasanromanv2-production.up.railway.app///exits/hospital_account?begin=${begin}&end=${end}&entry=${honorarios}&sorted=${sorted}`,{
         waitUntil: 'networkidle0'});
     // await page.goto(`https://warm-forest-49475.herokuapp.com/hospital_account`,{
     //             waitUntil: 'networkidle0'});

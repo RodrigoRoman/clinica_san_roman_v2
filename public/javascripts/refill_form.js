@@ -515,7 +515,7 @@ receiptContent += `           _____________________\n\n`;
       console.log(tableId)
       console.log(document.getElementById(tableId).innerHTML);
   
-      fetch('https://clinicasanromanadmin-production.up.railway.app/exits/generate-pdf-stock', {
+      fetch('https://clinicasanromanv2-production.up.railway.app/exits/generate-pdf-stock', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -564,6 +564,8 @@ toggleButtons.forEach((button) => {
 });
 
 document.getElementById('printAll').addEventListener('click', printAll);
+
+document.getElementById('resetButton').addEventListener('click', resetAll);
 
 
 

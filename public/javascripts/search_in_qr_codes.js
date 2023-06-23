@@ -183,7 +183,7 @@ function populateTableModal(event) {
   let search = $("#search_val").val();
   let exp = $("#expirDate").val();
   const timeUnits =  ["Hora", "Dia"];
-  $.getJSON( `/patients/${patient_id}/search`,{search,exp}, function( data ) {
+  $.getJSON( `/patients/232323/search`,{search,exp}, function( data ) {
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
         tableContent += '<tr>';
@@ -237,7 +237,7 @@ function updateSelectedSuppliesTable() {
       
       // Add the supply name
       const supplyName = document.createElement('h4');
-      supplyName.textContent = supply.name;
+      supplyName.textContent = supply.name+' '+supply.expiration;
       supplyContainer.appendChild(supplyName);
       
       // Add a flex container for the QR codes

@@ -31,6 +31,8 @@ function makeDMYHour(date){
 //Array with supplies to be refilled
 let refill_location = {};
 transactions.forEach(element => {
+    console.log('element')
+    console.log(element)
     if(element.service.service_type == "supply"){
     let trans = { 
             name: element.service.name,
@@ -41,8 +43,10 @@ transactions.forEach(element => {
             amount: element.amount,
             location: element.location,
             author:element.addedBy.username,
-            patient: element.patient.name
+            <!-- patient: element.patient.name -->
                 }
+                console.log('transacton')
+                console.log(trans)
     if(element.location in refill_location){
         refill_location[element.location].push(trans);
     }else{
@@ -135,11 +139,11 @@ for(let zone in refill_location){
                             refill_location[property].forEach(function(item,index){%>
                                 <%console.log(item)%>
                                 <tr>  
-                                    <td><%=item.name%></td> 
+                                    <!-- <td><%=item.name%></td>  -->
                                     <td><%=item.principle%></td>
-                                    <td><%=makeDMY(item.expiration)%></td>    
+                                    <!-- <td><%=makeDMY(new Date(item.expiration))%></td>     -->
                                     <td><%=item.amount%></td>  
-                                    <td><%=makeDMYHour(item.consumtionDate)%></td>  
+                                    <!-- <td><%=makeDMYHour(new Date(item.consumtionDate))%></td>   -->
                                     <td><%=item.author%></td> 
                                     <td><%=item.patient%></td>
                                     <td><%=item.location%></td>
@@ -167,7 +171,9 @@ for(let zone in refill_location){
                 <div class="col  d-flex justify-content-center">
                     <button id="printAll" type="button" class="btn btn-primary mx-2"><i class="fas fa-print"></i> Imprimir todo
                     </button>
-                    <button type="resetAll" class="btn btn-danger mx-2" onclick="resetAll()"><i class="fas fa-sync-alt" ></i> Reiniciar todo</button>
+                    <button type="resetAll" id="resetButton" class="btn btn-danger mx-2">
+                        <i class="fas fa-sync-alt"></i> Reiniciar todo
+                      </button>
                 </div>
             </div>
         </div> 

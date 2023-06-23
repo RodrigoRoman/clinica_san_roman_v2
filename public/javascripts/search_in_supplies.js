@@ -462,7 +462,7 @@ function generatePDF() {
   // Convert the content into a table
   var tableContent = convertToTable(content);
 
-  fetch('https://clinicasanromanadmin-production.up.railway.app/services/generate-pdf-exists', {
+  fetch('https://clinicasanromanv2-production.up.railway.app/services/generate-pdf-exists', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
