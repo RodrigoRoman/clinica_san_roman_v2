@@ -513,11 +513,6 @@ module.exports.accountToPDF = async (req,res) =>{
     };
     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions']});
     const page = await browser.newPage();           // open new tab
-    
-    // await page.goto(`https://pure-brushlands-42473.herokuapp.com/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
-    //     waitUntil: 'networkidle0'}); 
-    // await page.goto(`https://warm-forest-49475.herokuapp.com/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
-    //     waitUntil: 'networkidle0'});          // go to site
     await page.goto(
         `https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
           waitUntil: 'networkidle0'});
