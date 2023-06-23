@@ -23,5 +23,5 @@
 
 [phases.install]
 script = '''
-npm ci --force
+npm ci --legacy-peer-deps
 '''
