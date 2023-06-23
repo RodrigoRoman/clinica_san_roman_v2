@@ -129,6 +129,7 @@ const scriptSrcUrls = [
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome",
     "https://pure-brushlands-42473.herokuapp.com",
     "https://unpkg.com/",
+    "https://clinicasanromanv2-production.up.railway.app",
     "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"
 
 
