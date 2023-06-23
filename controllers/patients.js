@@ -9,6 +9,8 @@ const { cloudinary } = require("../cloudinary");
 const mongoosePaginate = require("mongoose-paginate-v2");
 const User = require('../models/user');
 const puppeteer = require('puppeteer'); 
+const ObjectId = mongoose.Types.ObjectId; // Importar la clase ObjectId
+
 // const service = require('../models/services');
 
   
@@ -387,6 +389,8 @@ module.exports.showDischargedPatient= async (req, res) => {
 module.exports.patientAccount = async (req, res) => {
     let {begin,end} = req.query;
     let pat = await Patient.findById(req.params.id);
+    console.log('show account')
+    console.log(req.params.id)
     //variable for local time 
     const nDate = getMexicoCityTime();
     if(!begin){
@@ -399,7 +403,7 @@ module.exports.patientAccount = async (req, res) => {
     }else{end = new Date(end+"T23:59:01.000Z")};
     const patient = await Patient.aggregate([   
         // put in a single document both transaction and service fields
-        {$match: {_id:  mongoose.Types.ObjectId(req.params.id)}},
+        {$match: {_id:  new ObjectId(req.params.id)}},
         {$group: {
             _id:"$name",
             patientName:{$last:"$name"},
@@ -501,46 +505,49 @@ module.exports.patientAccount = async (req, res) => {
 module.exports.accountToPDF = async (req,res) =>{ 
     let {begin,end,name} = req.query;               
     // const browser = await puppeteer.launch();       // run browser
-    const chromeOptions = {
-        headless: true,
-        defaultViewport: null,
-         args: ['--no-sandbox', '--disable-setuid-sandbox'] 
-    };
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions']});
-    const page = await browser.newPage();           // open new tab
-    await page.goto(
-        `https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
-          waitUntil: 'networkidle0'});
-    // await page.goto(
-    // `http://localhost:3000/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
-    //     waitUntil: 'networkidle0'});
+    
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    ignoreDefaultArgs: ['--disable-extensions'],
+    headless: 'new' // Use the new Headless mode
+  });
 
-    const dom = await page.$eval('.toPDF', (element) => {
-        return element.innerHTML
-    }) // Get DOM HTML
-    await page.setContent(dom)   // HTML markup to assign to the page for generate pdf
-    await page.addStyleTag({url: "https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"});
-    await page.addStyleTag({content: `.image_print{
-            position:absolute;
-            top:10px;
-            left:200px;
-            width:200px;
-            height: 100px;
-        }
-        .subRed {
-            font-size: 70% !important;
-            line-height: 1 !important;
-          }
-            .reduced {
-                font-size: 60% !important;
-                line-height: 1 !important;
-              }`})
-    const pdf = await page.pdf({landscape: false})
-    await browser.close(); 
-    res.contentType("application/pdf");
-    res.send(pdf);
-}
+  const page = await browser.newPage();
+  await page.goto(
+    `http://localhost:3000/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
+    { waitUntil: 'networkidle0' }
+  );
 
+  const dom = await page.$eval('.toPDF', (element) => {
+    return element.innerHTML;
+  });
+
+  await page.setContent(dom);
+  await page.addStyleTag({ url: 'https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css' });
+  await page.addStyleTag({
+    content: `.image_print {
+      position: absolute;
+      top: 10px;
+      left: 200px;
+      width: 200px;
+      height: 100px;
+    }
+    .subRed {
+      font-size: 70% !important;
+      line-height: 1 !important;
+    }
+    .reduced {
+      font-size: 60% !important;
+      line-height: 1 !important;
+    }`
+  });
+
+  const pdf = await page.pdf({ landscape: false });
+  await browser.close();
+
+  res.contentType('application/pdf');
+  res.send(pdf);
+};
 
 module.exports.dischAccountPDF = async (req,res) =>{ 
     let {begin,end,name} = req.query;               
