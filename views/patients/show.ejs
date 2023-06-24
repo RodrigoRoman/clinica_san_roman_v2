@@ -265,8 +265,10 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
         </form>
         <%}else{
           if (flag) {%>
-          <button class="btn btn-outline-info ml-1" onclick="printTicket();"><i class="fas fa-print"></i>Ticket</button>
-      <%}
+            <button id="printTicketBtn" class="btn btn-outline-info ml-1">
+              <i class="fas fa-print"></i>Ticket
+            </button>
+                  <%}
     }}%>
     </div>
   </div>

@@ -17,12 +17,12 @@ function getMexicoCityTime() {
     const mexicoCityOffset = -6 * 60; // Mexico City is UTC-6
     const mexicoCityTime = new Date(now.getTime() + mexicoCityOffset * 60 * 1000);
     return mexicoCityTime;
-  }
+}
   
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-  }
+}
 
 
 //functions for calculating array of dates in range by leap of # days
@@ -449,6 +449,8 @@ module.exports.refillForm = async (req, res) => {
         },
       })
     let transactions = currentPoint.servicesCar;
+    console.log('from refill form')
+    console.log(transactions)
     res.render(`exits/refill_form`,{transactions,entrega,recibe,'paused':currentPoint.resupplying});
 }
 
@@ -529,23 +531,20 @@ module.exports.searchRefillTrans = async (req, res) => {
     let recibe = req.query.recibe;
     let firstOrderSort = req.query.primarySort;
     let secondOrderSort = req.query.secondarySort
-
     let currentPoint = await Point.findOne({name:"datePoint"}).populate({
         path: 'servicesCar',
         populate: {
           path: 'service patient addedBy',
         },
       })
-    console.log('the current porint from teh searchAll')
-    console.log(currentPoint.servicesCar)
-    let transactions = currentPoint.servicesCar;
-    console.log('transactions id')
-    let transactionIds = transactions.map(transaction => transaction._id);
 
+    let transactions = currentPoint.servicesCar;
+    console.log('--------------transactions id ------------')
+    let transactionIds = transactions.map(transaction => transaction._id);
+    console.log(transactionIds)
     if(secondOrderSort != 'serviceData.name'){
          aggregatedTransactions = await Transaction.aggregate([
         {$match: {_id: {$in: transactionIds}}},
-        // ... rest of your aggregation pipeline
         {
             $lookup: {
             from: "patients",
