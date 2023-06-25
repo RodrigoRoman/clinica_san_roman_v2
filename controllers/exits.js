@@ -899,7 +899,7 @@ module.exports.showMoneyBox = async (req, res, next) => {
             populate: {
                 path: 'dependantMoneyBoxes' // and so on...
             }
-        }
+        },
     });
     let boxes = await MoneyBox.find({ 
         _id: { $nin: box.dependantMoneyBoxes }, 
@@ -939,12 +939,7 @@ module.exports.boxShowContent = async (req, res) => {
             path: 'service patient addedBy',
           },
         },
-        {
-          path: 'exitsActive',
-          populate: {
-            path: 'Exit author ',
-          },
-        },
+        { path: 'exitsActive', populate: { path: 'author' } }
       ]);
     
 
@@ -1369,13 +1364,9 @@ module.exports.boxShowFiltered = async (req, res) => {
             path: 'service patient addedBy',
           },
         },
-        {
-          path: 'exitsActive',
-          populate: {
-            path: 'Exit author ',
-          },
-        },
+        { path: 'exitsActive', populate: { path: 'author' } }
       ]);
+      
 
 const activeTransactions = await MoneyBox.aggregate([
     {

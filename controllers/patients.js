@@ -260,12 +260,47 @@ module.exports.dischargePatient = async (req, res) => {
 
 module.exports.deletePatient = async (req, res) => {
     const { id } = req.params;
-    await Patient.findByIdAndDelete(id);
-    //aqui se regresarian los productos incluidos?
-    req.flash('success', 'Paciente eliminado correctamente')
-    res.redirect('/patients');
-}
-
+    try {
+      const populatedPatient = await Patient.findById(id).exec();
+      await populatedPatient
+        .populate({
+          path: 'servicesCar',
+          populate: {
+            path: 'service',
+          },
+        })
+        if (populatedPatient && populatedPatient.servicesCar) {
+          const servicesCar = populatedPatient.servicesCar;
+          for (let serv of servicesCar) {
+            console.log('the serice')
+            console.log(serv)
+            if (serv.service.service_type === 'supply') {
+                console.log('resuppp')
+              serv.service.stock += serv.amount;
+              await serv.service.save();
+            }
+          }
+  
+          let id_arr = servicesCar.map((el) => el._id);
+          await Transaction.deleteMany({
+            _id: {
+              $in: id_arr
+            }
+          });
+          await MoneyBox.updateMany(
+            { transactionsActive: { $in: id_arr } },
+            { $pull: { transactionsActive: { $in: id_arr } } }
+          );
+        }
+        await Patient.findByIdAndDelete(id);
+      req.flash('success', 'Paciente eliminado correctamente');
+      res.redirect('/patients');
+    } catch (error) {
+      console.error(error);
+      req.flash('error', 'Error al eliminar el paciente');
+      res.redirect('/patients');
+    }
+  };
 
 module.exports.showPatient = async (req, res) => {
     let {begin,bH,end,eH} = req.query;
