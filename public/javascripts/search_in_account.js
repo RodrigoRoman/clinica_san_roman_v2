@@ -370,7 +370,8 @@ function populateTable(event) {
       }else{
         tableContent += '<td><a class = "text-dark" href="/services/'+this._id+'/edit">' + this.name + '</a></td>';
         tableContent += '<td><small alt ="'+this._id+'" class="text-muted">' + this.class + '</small></td>';
-        tableContent += '<td></td>'
+        let dateColor = defineBorder(diff_months(new Date(this.expiration) , new Date())/12)
+        tableContent += `<td ><span class ="border border-${dateColor}">`+makeDMY(new Date(this.expiration))+`</span></td>`;
         tableContent += '<td><small class="text-muted">  </small></td>';
       }
       if(timeUnits.includes(this.unit)){
@@ -410,6 +411,8 @@ function populateTableModal(event) {
       }else{
         tableContent += '<td><a class = "text-dark" href="/services/'+this._id+'/edit">' + this.name + '</a></td>';
         tableContent += '<td><small alt ='+this._id+' class="text-muted">' + this.class + '</small></td>';
+        let dateColor = defineBorder(diff_months(new Date(this.expiration) , new Date())/12)
+        tableContent += `<td ><span class ="border border-${dateColor}">`+makeDMY(new Date(this.expiration))+`</span></td>`;
         tableContent += '<td></td>'
 
       };
