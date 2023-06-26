@@ -21,14 +21,19 @@
   </div>
   <div class="d-flex justify-content-center align-items-center mb-4 mt-4">
     <select class="btn btn-outline-secondary btn-lg custom-select ml-2" id='department' name="department" style="max-width: 300px">
-      <option <%= currentUser.stockLocation == 'Vale' ? 'selected' : '' %> id="vale" value="Vale">Vale</option>
-        <option <%= currentUser.stockLocation == 'Central' ? 'selected' : '' %> id="central" value="Central">Central de enfermeria</option>
+      <option <%= currentUser.stockLocation == 'Central' ? 'selected' : '' %> id="central" value="Central">Central</option>
+        <option <%= currentUser.stockLocation == 'Endoscopia' ? 'selected' : '' %> id="endoscopia" value="Endoscopia">Endoscopia</option>
+        <option <%= currentUser.stockLocation == 'CPRE' ? 'selected' : '' %> id="cpre" value="CPRE">CPRE</option>
+        <option <%= currentUser.stockLocation == 'Bodega' ? 'selected' : '' %> id="bodega" value="Bodega">Bodega</option>
         <option <%= currentUser.stockLocation == 'Urgencias' ? 'selected' : '' %> id="urgencias" value="Urgencias">Urgencias</option>
         <option <%= currentUser.stockLocation == 'Quirofano' ? 'selected' : '' %> id="quirofano" value="Quirofano">Quirofano</option>
-        <option <%= currentUser.stockLocation == 'Farmacia1' ? 'selected' : '' %> id="farmacia1" value="Farmacia1">Farmacia1</option>
-        <option <%= currentUser.stockLocation == 'Farmacia2' ? 'selected' : '' %> id="farmacia2" value="Farmacia2">Farmacia2</option>
-        <option <%= currentUser.stockLocation == 'Bodega' ? 'selected' : '' %> id="bodega" value="Bodega">Bodega</option>
+        <option <%= currentUser.stockLocation == 'Parto' ? 'selected' : '' %> id="quirofano" value="Parto">Parto</option>
+        <option <%= currentUser.stockLocation == 'Farmacia' ? 'selected' : '' %> id="farmacia1" value="Farmacia">Farmacia</option>
+        <option <%= currentUser.stockLocation == 'Carro Urgencias' ? 'selected' : '' %> id="carroUrg" value="Carro Urgencias">Carro Urgencias</option>
+        <option <%= currentUser.stockLocation == 'Carro TOCO' ? 'selected' : '' %> id="carroTOC" value="Carro TOCO">Carro TOCO</option>
+        <option <%= currentUser.stockLocation == 'Carro QX' ? 'selected' : '' %> id="carroQX" value="Carro QX">Carro QX</option>
     </select>
+
     <select id="moneyBox" class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
       <% for (let box of boxes) {
         console.log('the box')
