@@ -549,10 +549,10 @@ module.exports.accountToPDF = async (req,res) =>{
 
   const page = await browser.newPage();
   await page.goto(
-    // `https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
-    // { waitUntil: 'networkidle0' }
-    `http://localhost:3000/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
+    `https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
     { waitUntil: 'networkidle0' }
+    // `http://localhost:3000/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
+    // { waitUntil: 'networkidle0' }
   );
 
   const dom = await page.$eval('.toPDF', (element) => {
