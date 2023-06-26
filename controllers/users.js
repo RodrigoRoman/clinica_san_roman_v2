@@ -14,13 +14,13 @@ module.exports.register = async (req, res, next) => {
         const { email, username, password,keyword,moneyBox} = req.body;
         let user;
         if(keyword == "administracionClinicaSRMina7"){
-            user = new User({ email, username,moneyBox, role:"directAdmin",color:"#00FF00"});
+            user = new User({ email, username,moneyBox, role:"directAdmin",color:"#4a81e8"});
         }
         if(keyword == "administracion1" || keyword == "cajaSanRoman"){
-            user = new User({ email, username,moneyBox, role:"caja",color:"#00DDAA"});
+            user = new User({ email, username,moneyBox, role:"caja",color:"#4a81e8"});
         }
         if(keyword == "enfermeriaSanRoman"){
-            user = new User({ email, username,moneyBox, role:"nurse",color:"#00FF00"});
+            user = new User({ email, username,moneyBox, role:"nurse",color:"#4a81e8"});
         }
         if(keyword == "MedicoSanRoman"){
             user = new User({ email, username,moneyBox, role:"medico",color: randomColor({luminosity:'light'})});
