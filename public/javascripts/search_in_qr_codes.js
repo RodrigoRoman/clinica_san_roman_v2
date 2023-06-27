@@ -186,26 +186,29 @@ function populateTableModal(event) {
   $.getJSON( `/patients/232323/search`,{search,exp}, function( data ) {
     // For each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
-        tableContent += '<tr>';
-        if(this.doctor){
-          tableContent += '<td id = "supplyName">' + this.name + '</td>';
-          tableContent += '<td><small alt ="'+this._id+'" class="text-muted">' + numberCommas(this.price) + '</small></td>';
-          tableContent += '<td><small class="text-muted">  </small></td>';
-        }else{
-          tableContent += '<td id = "supplyName">' + this.name + '</td>';
-          tableContent += '<td><small alt ="'+this._id+'" class="text-muted" id = "identifier">' + this._id + '</small></td>';
-          let dateColor = defineBorder(diff_months(new Date(this.expiration) , nDate)/12);
-          tableContent += '<td><small alt ='+this._id+' class="text-muted border border-'+dateColor+' px-1 py-1 d-inline-block"> Cad: ' + makeDMY(new Date(this.expiration))+ '</small></td>';
-         
-        }
-        if(timeUnits.includes(this.unit)){
-          tableContent += '<td></td>';
-        }else{
-          tableContent += '<td><div class="number-input"><button class="minus"></button><input class="quantity" min="0" name="quantity" value="1" type="number"><button class="plus"></button></div></td>';
-        }
-        tableContent += '<td class="art"><button type="button" class="addToCart btn btn-sm btn-info">Agregar</button></td>';
-        tableContent += '</tr>';
-      });
+      tableContent += '<tr>';
+      if(this.doctor){
+        tableContent += '<td id = "supplyName">' + this.name + '</td>';
+        tableContent += '<td><small alt ="'+this._id+'" class="text-muted">' + numberCommas(this.price) + '</small></td>';
+        tableContent += '<td><small class="text-muted">  </small></td>';
+      }else{
+        tableContent += '<td id = "supplyName">' + this.name + '</td>';
+        tableContent += '<td><small alt ="'+this._id+'" class="text-muted" class = "cls">' + this.class + '</small></td>';
+        let dateColor = defineBorder(diff_months(new Date(this.expiration) , nDate)/12);
+        tableContent += '<td><small alt ='+this._id+' class="text-muted border border-'+dateColor+' px-1 py-1 d-inline-block"> Cad: ' + makeDMY(new Date(this.expiration))+ '</small></td>';
+       
+      }
+      if(timeUnits.includes(this.unit)){
+        tableContent += '<td></td>';
+      }else{
+        tableContent += '<td><div class="number-input"><button class="minus"></button><input class="quantity" min="0" name="quantity" value="1" type="number"><button class="plus"></button></div></td>';
+      }
+      tableContent +='<td><small data-id="' + this._id + '" class="text-muted identifier" style="display:none;">' + this._id + '</small></td>';
+
+      tableContent += '<td class="art"><button type="button" class="addToCart btn btn-sm btn-info">Agregar</button></td>';
+      tableContent += '</tr>';
+    });
+
     // Inject the whole content string into our existing HTML table
     $('.modal-body #searchTableModal tbody').html(tableContent);
   });
