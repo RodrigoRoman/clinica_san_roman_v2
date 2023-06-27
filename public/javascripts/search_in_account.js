@@ -802,6 +802,67 @@ function submitDiscount(event,data) {
 
 };
 
+$("#account-table select[name='moneyBox']").on("change", function() {
+  console.log('changed box')
+  // Get the necessary data from the changed select element
+  var trans_id = $(this).closest("td").parent().find("#transID").attr("alt");
+  var moneyBoxValue = $(this).val(); // Get the selected moneyBox value
+
+
+  // Prepare the data object to pass to the function
+  var data = {
+    'trans_id': trans_id,
+    'moneyBox': moneyBoxValue // Add moneyBox value to the data object
+  };
+
+  // Call the toggleDiscount function with the relevant data
+  sumbitBoxChange(this, data);
+});
+
+
+//DISCOUNT
+function sumbitBoxChange(event,data) {
+  console.log('called box change'); // Add this line to check if the function execution completes
+
+      $.ajax({
+        type: 'PUT',
+        url: `/patients/${patient_id}/updateMoneyBox`,
+        data: data,
+        dataType: 'JSON',
+      }).done(function(response){
+        const uniqueStr = Math.random().toString(36).substring(7);
+        if (response.msg === 'True') {
+          let flashMessage = `<div class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
+          Caja destino modificada ${response.serviceName} en cuenta de ${response.patientName}
+          <button type="button" id = flashMessage${uniqueStr} class="closeAlert" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div> `;
+          $("main").prepend(flashMessage);
+          $("#account-table").fadeOut("fast").load(" #account-table > *").fadeIn('slow');
+          setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
+      }
+      else {
+          let flashMessage = `<div class="alert alert-danger alert-dismissible fade show fixed-top" role="alert">
+          Error: No se pudo modificar caja${response.serviceName} 
+          <button type="button" id = "flashMessage${uniqueStr}" class="closeAlert" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div> `;
+          $("main").prepend(flashMessage);
+          $("#account-table").fadeOut("fast").load(" #account-table > *").fadeIn('slow');
+          setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
+      }
+
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.log('AJAX request failed:', errorThrown);
+      }).always(function() {
+        // This block will execute regardless of success or failure
+        // ...
+      });
+
+};
+
 
 
 $(document).on("click", ".minus2", function() {
@@ -861,6 +922,9 @@ function toggleDiscount(discountButton) {
     // stop barcode scanning when inactive
   } 
 }
+
+
+
 
 function submitEditTimeService(event) {
   // event.preventDefault();

@@ -4,6 +4,8 @@ const mongoose = require("mongoose"),
 	  MoneyBox = require('./money_parts'),
 	//   Patient = require("./patient"),
 	  Schema = mongoose.Schema;
+	  const ObjectId = mongoose.Types.ObjectId; // Importar la clase ObjectI
+
 
 const TransactionSchema = new Schema({
 	patient: {
@@ -35,7 +37,10 @@ const TransactionSchema = new Schema({
 		type:Boolean,	
 		default:true
 	},
-	relatedBoxes: [{ type: Schema.Types.ObjectId, ref: 'MoneyBox' }],
+	relatedBox: { 
+		type: Schema.Types.ObjectId, 
+		ref: 'MoneyBox',       
+		default: new ObjectId("6494d3dde66aeb637ba60652")},
 	discharged_data:{
 		type: Schema.Types.ObjectId,
 		ref: 'Disch'

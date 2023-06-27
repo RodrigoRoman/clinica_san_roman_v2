@@ -36,8 +36,6 @@
 
     <select id="moneyBox" class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
       <% for (let box of boxes) {
-        console.log('the box')
-        console.log(box)
         %>
           
           <option <%= currentUser.moneyBox._id.equals(box._id) ? 'selected' : '' %>  id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
@@ -75,7 +73,7 @@ let total = 0;
       // Make a new object with amount to the same level as price, name and the other fields of servie
       if(patient.servicesCar){
        let serviceCar = (patient.servicesCar).map((el) =>{
-         if((el.consumtionDate>=begin) && (el.consumtionDate<=end)){return Object.assign(Object.assign({},el.service._doc),{trans_id:el._id,terminalDate:el.terminalDate,amount:el.amount,toggle:el.toggle,consumtionDate:el.consumtionDate,author:el.addedBy.username,discount:el.discount})}});
+         if((el.consumtionDate>=begin) && (el.consumtionDate<=end)){return Object.assign(Object.assign({},el.service._doc),{relatedBox:el.relatedBox,trans_id:el._id,terminalDate:el.terminalDate,amount:el.amount,toggle:el.toggle,consumtionDate:el.consumtionDate,author:el.addedBy.username,discount:el.discount})}});
       serviceCar = serviceCar.filter(el => el!= undefined);
       patientCar = serviceCar.sort((a, b) => b.consumtionDate - a.consumtionDate);
     }
@@ -100,7 +98,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
     </div>
   </div>
 </div>
-<div class="row justify-content-center" id = "account-table">
+<div class="row justify-content-center custom-container" id = "account-table">
   <div class="col-12 overflow-auto ">
     <table id="accountrStatus" class="table table-responsive-sm sticky1">
       <thead>
@@ -123,6 +121,9 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
           <th><small class = "text-muted">Descuento</small>
           </th>
             <th>Subtotal
+            </th>
+            <th>
+              Caja
             </th>
           <%}else{%>
             <th>Corregir
@@ -164,6 +165,18 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
                   <button type="button"  class="edit-item btn btn-sm btn-outline-info"><i class="fas fa-edit"></i></button>
                 </span>
               </td>
+              <td>
+                <select id=`moneyBox<%=item.trans_id%>` class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
+                  <% for (let box of boxes) {
+                    console.log('the box')
+                    console.log(item)
+                    %>
+                      <option <%= item.relatedBox._id.equals(box._id) ? 'selected' : '' %>  id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
+                  <% } %>
+                </select>
+                
+              </td>
+              
             <%}else{%>
             <%if(currentUser.username == (item.author)){%>
               <td>
@@ -227,6 +240,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
             %>
             <td>$ <%=numberCommas(subtotal)%><%total+=subtotal%>
             </td>
+            
             <td>
               <div class="df-switch">
                 <button type="button" class="btn btn-lg btn-toggle <%=act%>"  role = "button" data-toggle="button" aria-pressed="true" autocomplete="on">
@@ -273,7 +287,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
             <button id="printTicketBtn" class="btn btn-outline-info ml-1">
               <i class="fas fa-print"></i>Ticket
             </button>
-                  <%}
+      <%}
     }}%>
     </div>
   </div>

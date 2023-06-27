@@ -303,11 +303,10 @@ module.exports.deletePatient = async (req, res) => {
   };
 
 module.exports.showPatient = async (req, res) => {
+    console.log('show patient')
     let {begin,bH,end,eH} = req.query;
     let pat = await Patient.findById(req.params.id);
     let boxes = await MoneyBox.find({});
-    console.log('the box')
-    console.log(boxes)
     //variable for local time 
     const nDate = getMexicoCityTime();
     if(!begin){
@@ -323,7 +322,7 @@ module.exports.showPatient = async (req, res) => {
     const patient = await Patient.findById(req.params.id).populate({
         path: 'servicesCar',
         populate: {
-          path: 'service addedBy',
+          path: 'service addedBy relatedBox',
         },
       })
     let new_car = patient.servicesCar.map((el)=>{
@@ -341,7 +340,7 @@ module.exports.showPatient = async (req, res) => {
             return el;
         }else{
             return el
-            }
+        }
     })
     patient.servicesCar=new_car;
     await patient.save();
@@ -707,6 +706,8 @@ module.exports.addToCart = async (req, res) => {
     });
     var service;
     service = await Service.findById(req.body.service);
+    box = await MoneyBox.findById(req.body.moneyBoxId);
+
     if(!timePoint.resupplying || (service.service_type != 'supply')){
     const timeUnits =  ["Hora", "Dia"];
     //variable for local time 
@@ -716,6 +717,8 @@ module.exports.addToCart = async (req, res) => {
     if(!timeUnits.includes(service.unit)){
         amnt = parseInt(req.body.addAmount);
     }
+    console.log('body')
+    console.log(req.body)
     
     const transaction = new Transaction({
         patient: patient,
@@ -725,6 +728,7 @@ module.exports.addToCart = async (req, res) => {
         addedBy:req.user,
         location:req.body.location,
         terminalDate:termDate,
+        relatedBox: box
     });
 
     if(service.service_type == "supply"){
@@ -748,7 +752,6 @@ module.exports.addToCart = async (req, res) => {
     }
     }
     moneyBox.transactionsActive.push(transaction);
-    
     await transaction.save();
     await timePoint.save();
     await moneyBox.save()
@@ -819,7 +822,86 @@ module.exports.editDiscountFromAccount = async (req, res) => {
         console.log('error')
         console.log(e)
     }
+
 };
+
+module.exports.editMoneyBox = async (req, res) => {
+    console.log('inside edit money box')
+    console.log(req.body)
+    try {
+      const patient = await Patient.findById(req.params.id);
+      const { trans_id, moneyBox } = req.body; // Assuming the data is sent in the request body
+  
+      // Find the transaction by its ID
+      const transaction = await Transaction.findById(trans_id);
+  
+      if (!transaction) {
+        return res.status(404).send({ msg: "Transaction not found" });
+      }
+  
+      // Remove the transaction from any other box it was related to
+      const previousBoxId = transaction.relatedBox;
+      if (previousBoxId) {
+        const previousBox = await MoneyBox.findById(previousBoxId);
+        if (previousBox) {
+          previousBox.transactionsActive = previousBox.transactionsActive.filter(
+            (transactionId) => transactionId.toString() !== trans_id
+          );
+          await previousBox.save();
+          await removeTransactionFromHierarchy(previousBox, transaction);
+        }
+      }
+  
+      // Update the relatedBox field with the new moneyBox value
+      transaction.relatedBox = moneyBox;
+  
+      // Add the transaction to the activeTransactions of the new box
+      const newBox = await MoneyBox.findById(moneyBox);
+      if (newBox) {
+        await addTransactionToHierarchy(newBox, transaction);
+      }
+  
+      await transaction.save();
+      await patient.save();
+  
+      return res.send({
+        msg: "True",
+        serviceName: "sini",
+        patientName: patient.name,
+      });
+    } catch (e) {
+      console.log('error');
+      console.log(e);
+      return res.status(500).send({ msg: "Internal server error" });
+    }
+  };
+
+async function removeTransactionFromHierarchy(box, transaction) {
+    box.transactionsActive = box.transactionsActive.filter(
+      (transactionId) => transactionId.toString() !== transaction._id.toString()
+    );
+  
+    await box.save();
+  
+    for (const dependentBoxId of box.dependantMoneyBoxes) {
+      const dependentBox = await MoneyBox.findById(dependentBoxId);
+      if (dependentBox) {
+        await removeTransactionFromHierarchy(dependentBox, transaction);
+      }
+    }
+  }
+  
+  async function addTransactionToHierarchy(box, transaction) {
+    box.transactionsActive.push(transaction._id);
+    await box.save();
+  
+    for (const dependentBoxId of box.dependantMoneyBoxes) {
+      const dependentBox = await MoneyBox.findById(dependentBoxId);
+      if (dependentBox) {
+        await addTransactionToHierarchy(dependentBox, transaction);
+      }
+    }
+  }
 
 
 module.exports.updateServiceFromAccount = async (req, res) => {

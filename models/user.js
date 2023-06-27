@@ -43,7 +43,7 @@ const UserSchema = new Schema({
     moneyBox: {
         type: Schema.Types.ObjectId,
         ref: 'MoneyBox',
-        default: new ObjectId("6494d383e66aeb637ba6063c")
+        default: new ObjectId("6494d3dde66aeb637ba60652")
     }
 });
 

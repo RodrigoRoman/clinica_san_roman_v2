@@ -217,11 +217,11 @@ receiptContent += `             ${transactions.property}\n`;
 receiptContent += `           _____________________\n\n`;
 
     if (secondarySort == 'serviceData.name') {
-        receiptContent += `Nombre            Principio        Cantidad\n`;
+        receiptContent += `Nombre            Principio\n                               Cantidad\n`;
         receiptContent += `------------------------------------------\n`;
 
         transactions.items.forEach(function (item, index) {
-            receiptContent += `${item.service.name.padEnd(15)}   ${item.service.principle.padEnd(15)}     ${item.amount.toString().padEnd(8)}\n`;
+            receiptContent += `${item.service.name.padEnd(15)}   ${item.service.principle.padEnd(15)}\n                                ${item.amount.toString().padEnd(8)}\n`;
         });
     } else {
         receiptContent += `Nombre - Principio     \n\n Cad    Cant   Fecha   Hora   Por   PX   Stock\n`;
@@ -335,18 +335,22 @@ receiptContent += ` \n\n`
 receiptContent += `             ${transactions.property}\n`;
 receiptContent += `           _____________________\n\n`;
 
+console.log('secondary sort ')
+console.log(secondarySort)
     if (secondarySort == 'serviceData.name') {
-        receiptContent += `Nombre            Principio        Cantidad\n`;
+      console.log('in here true if')
+        receiptContent += `Nombre            Principio\n                                     Cantidad\n`;
         receiptContent += `------------------------------------------\n`;
-
         transactions.items.forEach(function (item, index) {
-            receiptContent += `${item.service.name.padEnd(15)}   ${item.service.principle.padEnd(15)}     ${item.amount.toString().padEnd(8)}\n`;
+            receiptContent += `${item.service.name.padEnd(15)}  ${item.service.principle.padEnd(15)}\n                                ${item.amount.toString().padEnd(8)}\n`;
         });
     } else {
+      console.log('excecuting')
         receiptContent += `Nombre - Principio     \n\nCad   Cant  Fecha   Hora   Por   PX   Stock\n`;
         receiptContent += `------------------------------------------------\n`;
 
         transactions.items.forEach(function (item, index) {
+          console.log('excecuting loop')
             receiptContent += `${(item.service.name + ' - '+item.service.principle).padEnd(15)} \n${makeMY(new Date(item.service.expiration)).padEnd(3)} ${item.amount.toString().padEnd(3)} ${makeDMYHour(new Date(item.consumtionDate)).padEnd(4)} ${abbreviateSentence(item.addedBy.username).padEnd(5)} ${abbreviateSentence(item.patient.name).padEnd(5)} ${abbreviateSentence(item.location).padEnd(5)}\n`;
     });
 }
@@ -409,7 +413,7 @@ receiptContent += `           _____________________\n\n`;
  const chunks = []; // array to hold the chunks
  
  // split the printData2 array into chunks of CHUNK_SIZE bytes
- for (let i = 0; i < printData2.length; i += CHUNK_SIZE) {
+ for (let i = 0; i < printData2.length; i += CHUNK_SIZE){
    chunks.push(printData2.slice(i, i + CHUNK_SIZE));
  }
  

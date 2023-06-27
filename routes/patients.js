@@ -22,6 +22,9 @@ router.get('/newPharmacySale',isLoggedIn, patients.createPharmacySale)
 
 router.put('/:id/updateDiscount', patients.editDiscountFromAccount)
 
+router.put('/:id/updateMoneyBox', patients.editMoneyBox)
+
+
 
 //SHOW ROUTE FOR PRODUCTS
 
