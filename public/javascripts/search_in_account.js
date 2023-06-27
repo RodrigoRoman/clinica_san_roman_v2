@@ -363,7 +363,11 @@ function populateTable(event) {
       tableContent += '<tr>';
       if(this.doctor){
         tableContent += '<td><a class = "text-dark" href="/services/'+this._id+'/edit">' + this.name + '</a></td>';
-        tableContent += '<td><small alt ="'+this._id+'" class="text-muted">' + numberCommas(this.price) + '</small></td>';
+        if(this.unit != 'Dinamico'){
+          tableContent += '<td><small alt ="'+this._id+'" class="text-muted">' + numberCommas(this.price) + '</small></td>';
+        }else{
+          tableContent += '<td><small alt ="'+this._id+'" class="text-muted">Elegir Cantidad</small></td>';
+        }
         tableContent += '<td><small class="text-muted">  </small></td>';
         tableContent += '<td><small class="text-muted">  </small></td>';
 
@@ -405,7 +409,11 @@ function populateTableModal(event) {
       tableContent += '<tr>';
       if(this.doctor){
         tableContent += '<td><a class = "text-dark" href="/services/'+this._id+'/edit">' + this.name + '</a></td>';
-        tableContent += '<td><small alt ='+this._id+' class="text-muted">' + this.price + '</small></td>';
+        if(this.unit != 'Dinamico'){
+          tableContent += '<td><small alt ="'+this._id+'" class="text-muted">' + numberCommas(this.price) + '</small></td>';
+        }else{
+          tableContent += '<td><small alt ="'+this._id+'" class="text-muted">Elegir Cantidad</small></td>';
+        }
         tableContent += '<td><small class="text-muted">  </small></td>';
         tableContent += '<td><small class="text-muted">  </small></td>';
       }else{
@@ -428,6 +436,7 @@ function populateTableModal(event) {
     $('.modal-body #searchTableModal tbody').html(tableContent);
   });
 };
+
 
 function addService(event) {
   console.log('the stock location')
@@ -872,14 +881,13 @@ $(document).on("click", ".minus2", function() {
   if (currentValue - 1 >= 0) {
     quantityInput.val(currentValue - 1);
     const discountButton = $(this).closest("td").find(".discount-button");
-
-    // Set the toggle to inactive
     discountButton.removeClass("btn-discount-inactive btn-secondary");
     discountButton.addClass("btn-discount-active btn-primary");
     discountButton.html('<i class="fas fa-paper-plane"></i>'); 
 
   }
 });
+
 $(document).on("click", "tbody .plus2", function() {
   const quantityInput = $(this).parent().children(".quantity");
   const currentValue = parseInt(quantityInput.val());

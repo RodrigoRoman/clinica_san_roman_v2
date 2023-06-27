@@ -9,6 +9,8 @@ const { cloudinary } = require("../cloudinary");
 const mongoosePaginate = require("mongoose-paginate-v2");
 const User = require('../models/user');
 const puppeteer = require('puppeteer'); 
+const e = require('connect-flash');
+const { copy } = require('../routes/services');
 const ObjectId = mongoose.Types.ObjectId; // Importar la clase ObjectId
 
 // const service = require('../models/services');
@@ -339,10 +341,10 @@ module.exports.showPatient = async (req, res) => {
             el.save()
             return el;
         }else{
-            return el
+                return el
         }
     })
-    patient.servicesCar=new_car;
+
     await patient.save();
     const str_id = JSON.stringify(patient._id); 
     if (!patient) {
@@ -482,6 +484,7 @@ module.exports.patientAccount = async (req, res) => {
             rfc : {$last:"$rfc"},
             diagnosis : {$last:"$diagnosis"},
             admissionDate : {$last:"$admissionDate"},
+            unit : {$last:"$unit"},
             price: {$last:"$price"},
             cost: {$last:0},
             expiration: { $push:"$expiration"},
@@ -514,7 +517,7 @@ module.exports.patientAccount = async (req, res) => {
             price: {$push:"$price"},
             cost: {$push:0},
             discount: { $last: "$discount"}, // Add discount
-
+            service_unit:{$push:"$unit"},
             expiration: { $push:"$expiration"},
             sell_price: { $push:"$sell_price"},
             buy_price: { $push: "$buy_price"},
@@ -638,10 +641,9 @@ module.exports.search_3 = async (req, res) => {
             { class: search },
             { principle: search },
             { description: search },
-            { doctor: search}
         ];
         
-        let supplies = await Service.find({$or:dbQueries,deleted:false}).limit(3);
+        let supplies = await Service.find({$or:dbQueries,deleted:false}).limit(5);
 		if (!supplies) {
 			res.locals.error = 'No results match that query.';
         }
@@ -668,7 +670,6 @@ module.exports.searchAll = async (req, res) => {
             { class: search },
             { principle: search },
             { description: search },
-            { doctor: search}
         ];
         let supplies = [];
         if(exp){
@@ -734,15 +735,16 @@ module.exports.addToCart = async (req, res) => {
     }
     patient.servicesCar.push(transaction);
     try{
+
     if(moneyBox.dependantMoneyBoxes.length > 0){
-    for (const dependentBox of moneyBox.dependantMoneyBoxes) {
-        dependentBox.transactionsActive.push(transaction)
-        await dependentBox.save()
-        for (const rootDependantBox of dependentBox.dependantMoneyBoxes) {
-            rootDependantBox.transactionsActive.push(transaction)
-            await rootDependantBox.save()
+        for (const dependentBox of moneyBox.dependantMoneyBoxes) {
+            dependentBox.transactionsActive.push(transaction)
+            await dependentBox.save()
+            for (const rootDependantBox of dependentBox.dependantMoneyBoxes) {
+                rootDependantBox.transactionsActive.push(transaction)
+                await rootDependantBox.save()
+            }
         }
-    }
     }
     moneyBox.transactionsActive.push(transaction);
     await transaction.save();
@@ -815,7 +817,6 @@ module.exports.editDiscountFromAccount = async (req, res) => {
         console.log('error')
         console.log(e)
     }
-
 };
 
 module.exports.editMoneyBox = async (req, res) => {

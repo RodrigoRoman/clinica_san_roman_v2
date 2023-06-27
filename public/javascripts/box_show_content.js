@@ -266,11 +266,11 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
                             <td>${ transaction.user.username }</td>
                             <td>${ new Date(transaction.consumtionDate).toISOString().substr(0,10)} a las ${makeHour(new Date(transaction.consumtionDate))}</td>
                             <td>${ transaction.amount}</td>
-                            <td>$${numberCommas(transaction.total)}</td>`
+                            <td>$${numberCommas(transaction.total.toFixed(2))}</td>`
                             : `
                             <td>${ transaction.name}</td>
                             <td>${ transaction.amount}</td>
-                            <td>$${numberCommas(transaction.total)}</td>`
+                            <td>$${numberCommas(transaction.total.toFixed(2))}</td>`
                         }
                         </tr>`;
                         totalCurrentIncome+=transaction.total;
@@ -335,12 +335,12 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
                           <td>${ exit.user.username}</td>
                           <td>${ new Date(exit.clearDate).toISOString().substr(0,10)} a las ${makeHour(new Date(exit.clearDate))}</td>
                           <td>${ exit.amount }</td>
-                          <td>$${numberCommas(exit.total)}</td>`
+                          <td>$${numberCommas(exit.total.toFixed(2))}</td>`
                           :`
                           <td>${ exit.category }</td>
                           <td>${ exit.amount }</td>
 
-                           <td>$${numberCommas(exit.total)}</td>`
+                           <td>$${numberCommas(exit.total.toFixed(2))}</td>`
                         }
                         </tr>`
                         totalCurrentExits+=exit.total
@@ -401,7 +401,7 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
                           <td>${ transaction.user.username }</td>
                           <td>${ new Date(transaction.consumtionDate).toISOString().substr(0,10)} a las ${makeHour(new Date(transaction.consumtionDate))}</td>
                           <td>${ transaction.amount}</td>
-                          <td>$${numberCommas(transaction.total)}</td>`
+                          <td>$${numberCommas(transaction.total.toFixed(2))}</td>`
                           : `
                           <td>${ transaction.name}</td>
                           <td>${ transaction.amount}</td>
@@ -473,7 +473,7 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
                         :`
                         <td>${ exit.category }</td>
                         <td>${ exit.amount }</td>
-                        <td>$${numberCommas(exit.total)}</td>`
+                        <td>$${numberCommas(exit.total.toFixed(2))}</td>`
                       }
                       </tr>`
                         totalHistoryExits+=parseFloat(exit.total)
