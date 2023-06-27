@@ -359,7 +359,7 @@ module.exports.showPatient = async (req, res) => {
 
 module.exports.showDischargedPatient= async (req, res) => {
     const patient = await Patient.aggregate([  
-        {$match: {_id:  mongoose.Types.ObjectId(req.params.id)}}, 
+        {$match: {_id:  new ObjectId(req.params.id)}}, 
         {$group: {
             _id:"$name",
             patientName:{$last:"$name"},
@@ -586,24 +586,17 @@ module.exports.accountToPDF = async (req,res) =>{
 };
 
 module.exports.dischAccountPDF = async (req,res) =>{ 
-    let {begin,end,name} = req.query;               
-    // const browser = await puppeteer.launch();       // run browser
-    const chromeOptions = {
-        headless: true,
-        defaultViewport: null,
-        args: [
-            "--incognito",
-            "--no-sandbox",
-            "--single-process",
-            "--no-zygote"
-        ],
-    };
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions']});
-    const page = await browser.newPage();           // open new tab
+   
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        ignoreDefaultArgs: ['--disable-extensions'],
+        headless: 'new' // Use the new Headless mode
+      });    
+      const page = await browser.newPage();           // open new tab
     
     // await page.goto(`https://pure-brushlands-42473.herokuapp.com/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
     //     waitUntil: 'networkidle0'}); 
-    await page.goto(`https://clinicasanromanv2-production.up.railway.app//patients/${req.params.id}/showDischarged`,{
+    await page.goto(`https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showDischarged`,{
         waitUntil: 'networkidle0'});          // go to site
     // await page.goto(
     //     `http://localhost:3000/patients/${req.params.id}/showDischarged`,{

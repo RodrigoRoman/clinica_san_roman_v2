@@ -27,6 +27,9 @@ function convertUTCDateToLocalDate(date) {
   const mexicoCityTime = new Date(now.getTime() + mexicoCityOffset * 60 * 1000);
   return mexicoCityTime;
 }
+function numberCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 const now = getMexicoCityTime(); // Get current time in Mexico City
 const monthBefore = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate()); // Subtract one month
@@ -174,9 +177,9 @@ const monthBefore = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(
                                       console.log('paciente')
                                       console.log(patient)
                                     %>
-                                    <li class="list-group-item  border border-danger">Total: $<%=patient.totalReceived%>. Cobrada por: <%= patient.receivedBy.username%> el  <%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
+                                    <li class="list-group-item  border border-danger">Total: $<%=numberCommas(patient.totalReceived)%>. Cobrada por: <%= patient.receivedBy.username%> el  <%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
                                     <%}else{%>
-                                      <li class="list-group-item ">Total: $<%=patient.totalReceived%>. Cobrada por: <%= patient.receivedBy.name%><%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
+                                      <li class="list-group-item ">Total: $<%=numberCommas(patient.totalReceived)%>. Cobrada por: <%= patient.receivedBy.name%><%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
 
                                       <%}}%>
                                     <li class="list-group-item">Telefono: <%= patient.phone%> </li>

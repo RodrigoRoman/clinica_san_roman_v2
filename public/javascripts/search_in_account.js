@@ -802,7 +802,8 @@ function submitDiscount(event,data) {
 
 };
 
-$("#account-table select[name='moneyBox']").on("change", function() {
+$('main').on('change', '#account-table select[name="moneyBox"]', function() {
+  // Your code for handling the change event
   console.log('changed box')
   // Get the necessary data from the changed select element
   var trans_id = $(this).closest("td").parent().find("#transID").attr("alt");
