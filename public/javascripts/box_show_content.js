@@ -820,7 +820,7 @@ $(document).on("click", ".plus", function() {
 });
 
 
-function addChangeToBox(id) {
+function addChangeToBox(id,event) {
   // Get the input values from the modal
   const name = $('#changeName').val();
   const amount = parseInt($('#changeAmount').val());
@@ -841,10 +841,10 @@ function addChangeToBox(id) {
     url: `/exits/addChangeToBox`,
     data: objectToAdd,
     dataType: 'JSON'
-  }).done(function(response) {
+  }).done(async function(response) {
     // Handle the response if needed
     console.log(response);
-    window.location.reload();
+    // window.location.reload();
     let flashMessage = `<div class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
         Cambio agregado
         <button type="button" id = flashMessage${2323} class="closeAlert" data-dismiss="alert" aria-label="Close">
@@ -852,19 +852,21 @@ function addChangeToBox(id) {
         </button>
         </div> `;
         $("main").prepend(flashMessage);
+     await openBox(event)
+     window.location.reload();
+
   });
 }
 
-$('#saveChange').on('click', function() {
+$('#saveChange').on('click', async function(event) {
   // Get the box ID from somewhere (e.g., a data attribute)
   const boxId = box._id;
 
   // Call the addChangeToBox function with the box ID
-  addChangeToBox(boxId);
-  openBox()
+  await addChangeToBox(boxId,event);
 });
 
-  async function openBox(e) { 
+async function openBox(e) { 
       e.preventDefault();
 
   serviceUuid = 'e7810a71-73ae-499d-8c15-faa9aef0c3f2';
@@ -898,7 +900,6 @@ try {
   await characteristic.writeValue(printData1);
   await server.disconnect();
   this.submit();
-
 } catch (error) {
   console.error(error);
 }

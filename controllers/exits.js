@@ -887,7 +887,6 @@ module.exports.addChangeToBox = async (req, res) => {
     { new: true, useFindAndModify: false }
   );
     await currentBox.save();
-    req.flash('success', 'Cambio agregado');
     res.json({msg:'true'})
   }catch(e){
     console.log('error!!')
