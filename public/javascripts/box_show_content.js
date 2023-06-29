@@ -101,6 +101,25 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
   receiptContent += '\n\n';
 
 
+  //Change
+  if(box.change.lengh>0){
+    receiptContent += '              ' + 'Cambio/Depositos'+ '\n';
+      receiptContent += '           _______________\n\n';
+      receiptContent += 'Nombre\n              Agregado Por       Total\n';
+      receiptContent += '____________________________________________\n';
+      
+      var totalTrans = 0;
+      box.change.forEach(function (item, index) {
+        totalTrans +=item.total;
+        receiptContent +=
+            `${item.name.padEnd(14)}\n                       ${item.addedBy.username.toString().padEnd(8)}  $${item.amount.toLocaleString("en-US").padEnd(8)}\n`;
+      });
+      receiptContent += '\n';
+      receiptContent += '             ' + 'Total Entradas:$'+`${totalTrans.toLocaleString("en-US")}`+'\n';
+      receiptContent += '\n\n';
+    }
+
+  if(activeExits.length>0){
   receiptContent += '              ' + 'Salidas'+ '\n';
   receiptContent += '           _____________\n\n';
   // Print the exitsActive table
@@ -118,7 +137,7 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
   receiptContent += '\n\n';
   receiptContent += '             ' + 'Balance total:$'+`${totalTrans-totalExts.toLocaleString("en-US")}`+'\n';
   receiptContent += '\n\n';
-
+  }
  
  dateNow = getMexicoCityTime()
   hour = dateNow.getUTCHours(); // Get the hour component of the datetime
@@ -291,6 +310,49 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
             </table>
         </div>
 
+
+
+
+
+        <div class="table-container">
+            <div class="pop-up-container">
+                <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color: #90EE90; text-transform: uppercase; letter-spacing: 2px;  font-size: 20px">Depositos/Cambio</p> 
+            </div>
+            <table class="table  table-success">
+                <thead class="thead-primary">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Agregado Por</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+                    totalChange = 0.0;
+                        box.change.forEach(changeItem => { 
+                          
+                          tables += 
+                          `<tr>
+                            <td>${changeItem.name}</td>
+                            <td>${changeItem.addedBy.username}</td>
+                            <td>${new Date(changeItem.dateAdded).toISOString().substr(0,10)} a las ${makeHour(new Date(changeItem.dateAdded)) }</td>
+                            <td>${ changeItem.amount }</td>`
+                            totalChange+=changeItem.amount
+                 });
+                 tables += `
+                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td><b>Total:</b></td>
+                    <td><b>$${numberCommas(totalChange.toFixed(2))}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
         <div class="table-container">
         <div class="pop-up-container">
                 <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color: #FF7F7F; text-transform: uppercase; letter-spacing: 2px;  font-size: 20px">Egresos actuales</p> 
@@ -363,7 +425,7 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
                 </tbody>
             </table>
             <div style="text-align: right;">
-                <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color:#0505ef;text-transform: uppercase; letter-spacing: 2px; font-size: 20px;">Balance de corte:$${numberCommas((totalCurrentIncome-totalCurrentExits).toFixed(2))} </p> 
+                <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color:#0505ef;text-transform: uppercase; letter-spacing: 2px; font-size: 20px;">Balance de corte:$${numberCommas((totalCurrentIncome+totalChange-totalCurrentExits).toFixed(2))} </p> 
             </div>
         </div>
         
@@ -705,4 +767,98 @@ function generatePDF() {
 $(document).on('click', '.cut-button', function() {
   const boxId = $(this).data('box-id');
   makeCut(boxId);
+});
+
+
+
+$(document).ready(function() {
+  // Handle button click event
+  $('#change').click(function() {
+    // Show the modal
+    $('#changeModal').modal('show');
+  });
+
+  // Handle save button click event
+  $('#saveChange').click(function() {
+    // Get the entered name and amount
+    var name = $('#changeName').val();
+    var amount = parseInt($('#changeAmount').val());
+
+    // Perform validation if needed
+
+    // Create a new change object
+    var change = {
+      name: name,
+      amount: amount
+    };
+
+    // Perform further actions with the change object
+    console.log(change);
+
+    // Hide the modal
+    $('#changeModal').modal('hide');
+  });
+});
+
+
+// Minus button click event handler
+$(document).on("click", ".minus", function() {
+  const inputElement = $(this).closest(".modal").find(".quantity");
+  const currentValue = parseInt(inputElement.val());
+  if (currentValue - 1 >= 0) {
+    inputElement.val(currentValue - 1);
+  }
+});
+
+// Plus button click event handler
+$(document).on("click", ".plus", function() {
+  const inputElement = $(this).closest(".modal").find(".quantity");
+  const currentValue = parseInt(inputElement.val());
+  if (currentValue + 1 < 999) {
+    inputElement.val(currentValue + 1);
+  }
+});
+
+
+function addChangeToBox(id) {
+  // Get the input values from the modal
+  const name = $('#changeName').val();
+  const amount = parseInt($('#changeAmount').val());
+  // Create the object to be sent in the request body
+  const objectToAdd = {
+    name: name,
+    amount: amount,
+    boxID:box._id
+  };
+  
+  console.log('from add change to box')
+  console.log(objectToAdd)
+  console.log('from add change id')
+  console.log(box._id)
+  // Make the AJAX request
+  $.ajax({
+    type: 'PUT',
+    url: `/exits/addChangeToBox`,
+    data: objectToAdd,
+    dataType: 'JSON'
+  }).done(function(response) {
+    // Handle the response if needed
+    console.log(response);
+    window.location.reload();
+    let flashMessage = `<div class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
+        Cambio agregado
+        <button type="button" id = flashMessage${2323} class="closeAlert" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div> `;
+        $("main").prepend(flashMessage);
+  });
+}
+
+$('#saveChange').on('click', function() {
+  // Get the box ID from somewhere (e.g., a data attribute)
+  const boxId = box._id;
+
+  // Call the addChangeToBox function with the box ID
+  addChangeToBox(boxId);
 });

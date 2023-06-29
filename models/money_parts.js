@@ -22,7 +22,19 @@ const MoneyBoxSchema = new Schema({
           type: Schema.Types.ObjectId,
           ref: "Exit"
         }
-    ]
+    ],
+    change: {
+      type: [{
+        name: { type: String, default: 'Cambio' },
+        amount: { type: Number, default: 0 },
+        dateAdded: { type: Date },
+        addedBy: { 
+          type: Schema.Types.ObjectId,
+          ref: 'User'
+        },
+      }],
+      default: []
+    }
 });
 
 MoneyBoxSchema.post('remove', function(doc) {

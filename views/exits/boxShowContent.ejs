@@ -73,14 +73,51 @@ function makeYMD(date){
         <select id="exitSort" class="btn btn-outline-secondary btn-lg custom-select" style="max-width: 300px">
             <option value="name">Nombre</option>
             <option value="category">Clase</option>
+            
             <option value="_id">Salidas individuales</option>
         </select>
     </div>
     <div class="ml-4 mt-4">
         <button class="btn btn-outline-secondary" id ="genPDf"><i class="fas fa-file-pdf" ></i></button>
     </div>
+    <div class="ml-4 mt-4">
+        <button class="btn btn-outline-info" id ="change"><i class="fas fa-coins" ></i></button>
+    </div>
 
 </div>
+
+
+<div class="modal" id="changeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Cambio</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group ">
+            <label for="changeName">Nombre:</label>
+            <input type="text" class="form-control mt-4" id="changeName" placeholder="Ingresar nombre">
+          </div>
+          <div class="form-group">
+            <label for="changeAmount">Cantidad:</label>
+            <div class="number-input mt-4 ml-3">
+              <button class="minus"></button>
+              <input class="quantity" min="0" name="changeAmount" id="changeAmount" value="1" type="number">
+              <button class="plus"></button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="saveChange">Agregar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <div class="container scrollDiv " id ="contentTables">
     
@@ -138,6 +175,50 @@ function makeYMD(date){
                 </tbody>
             </table>
         </div>
+
+
+
+
+        <div class="table-container">
+            <div class="pop-up-container">
+                <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color: #90EE90; text-transform: uppercase; letter-spacing: 2px;  font-size: 20px">Depositos/Cambio</p> 
+            </div>
+            <table class="table  table-success">
+                <thead class="thead-primary">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Agregado Por</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% totalChange = 0.0;
+                        box.change.forEach(changeItem => { %>
+                        <tr>
+                            <td><%= changeItem.name%></td>
+                            <td><%= changeItem.addedBy.username %></td>
+                            <td><%= changeItem.dateAdded.toISOString().substr(0,10)%> a las <%=makeHour(changeItem.dateAdded) %></td>
+                            <td><%= changeItem.amount %></td>
+                            <%
+                            totalChange+=changeItem.amount
+                 }); %>
+                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td><b>Total:</b></td>
+                    <td><b>$<%=numberCommas(totalChange.toFixed(2))%></b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+
+
         
 
         <div class="table-container">
@@ -179,10 +260,9 @@ function makeYMD(date){
             </table>
         </div>
         <div style="text-align: right;">
-            <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color:#0505ef;text-transform: uppercase; letter-spacing: 2px; font-size: 20px;">Balance de corte:$<%=numberCommas((totalCurrentIncome-currentTotalExit).toFixed(2))%> </p> 
+            <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color:#0505ef;text-transform: uppercase; letter-spacing: 2px; font-size: 20px;">Balance de corte:$<%=numberCommas((totalCurrentIncome+totalChange-currentTotalExit).toFixed(2))%> </p> 
         </div>
         
-
         <div class="table-container">
             <div class="pop-up-container">
                 <p class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: 2px;  font-size: 20px">Historial de ingresos</p> 
@@ -213,7 +293,7 @@ function makeYMD(date){
                             <%if(transaction.service.service_type == 'supply'){%>
                                 <td>$<%=  transaction.service.sell_price %></td>
                                 <td>%<%=  transaction.discount %></td>
-                                <td>$<%=  (transaction.total).toFixed(2)  %></td>
+                                <td>$<%=  numberCommas((transaction.total).toFixed(2))  %></td>
                             <%}else{%>
                                 <td>$<%=  transaction.service.price %></td>
                                 <td>%<%=  transaction.discount %></td>

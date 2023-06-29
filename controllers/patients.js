@@ -722,7 +722,7 @@ module.exports.addToCart = async (req, res) => {
         addedBy:req.user,
         location:req.body.location,
         terminalDate:termDate,
-        relatedBox: box
+        relatedBoxe: box._id
     });
 
     if(service.service_type == "supply"){

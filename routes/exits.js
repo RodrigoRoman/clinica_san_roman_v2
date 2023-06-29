@@ -90,8 +90,10 @@ router.route('/generate-pdf-account')
 router.route('/generate-pdf-stock')
     .post(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.generate_pdf_stock))
     
-
 router.route('/removeBoxFrom/:id')
     .put(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.removeBoxFrom))
+
+router.route('/addChangeToBox')
+    .put(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.addChangeToBox))
 
 module.exports = router;

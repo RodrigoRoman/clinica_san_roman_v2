@@ -854,6 +854,7 @@ module.exports.createBoxForm = async (req, res, next) => {
     console.log(boxes)
     res.render(`exits/new_money_box`,{boxes,hierarchyParam})
 }
+
 module.exports.createBox = async (req, res, next) => {
     let name  = req.body.box.name;
     let boxes  = req.body.box.boxes;
@@ -865,6 +866,35 @@ module.exports.createBox = async (req, res, next) => {
     req.flash('success', 'Apartado creado');
     res.redirect(`/exits`)
 }
+
+module.exports.addChangeToBox = async (req, res) => {
+  try{
+  console.log('called function')
+  let currbox = await MoneyBox.findById(req.body.boxID);
+  console.log('the current box');
+  console.log(currbox);
+
+  const objectToAdd = {
+    name: req.body.name,
+    amount: parseInt(req.body.amount),
+    dateAdded: getMexicoCityTime(),
+    addedBy:res.locals.currentUser // Set the current date
+  };
+
+  let currentBox = await MoneyBox.findByIdAndUpdate(
+    req.body.boxID,
+    { $push: { change: objectToAdd } }, // Use $push to add objectToAdd to the 'change' array
+    { new: true, useFindAndModify: false }
+  );
+    await currentBox.save();
+    req.flash('success', 'Cambio agregado');
+    res.json({msg:'true'})
+  }catch(e){
+    console.log('error!!')
+    console.log(e)
+  }
+}
+
 
 module.exports.removeBoxFrom = async (req, res, next) => {
     console.log('remove box from called');
@@ -939,7 +969,9 @@ module.exports.boxShowContent = async (req, res) => {
             path: 'service patient addedBy',
           },
         },
-        { path: 'exitsActive', populate: { path: 'author' } }
+        { path: 'exitsActive', populate: { path: 'author' } },
+        { path: 'change', populate: { path: 'addedBy' } }
+
       ]);
     
 
@@ -1306,11 +1338,8 @@ module.exports.makeCut = async (req, res, next) => {
             }
         }
     }).populate('transactionsActive').populate('exitsActive');
-    // Update relatedBoxes for each transaction
     try{
     for (const transaction of box.transactionsActive) {
-        console.log('the transaction')
-        console.log(transaction)
         transaction.relatedBoxes.push(box._id);
         for (const dependentBox of box.dependantMoneyBoxes) {
             transaction.relatedBoxes.push(dependentBox._id);
@@ -1333,8 +1362,8 @@ module.exports.makeCut = async (req, res, next) => {
     }
     box.transactionsActive = [];
     box.exitsActive = [];
+    box.change = []; // Set the 'change' field to an empty array
     await box.save();
-
     res.json({})
 }catch(e){
     console.log('error')
@@ -1364,7 +1393,8 @@ module.exports.boxShowFiltered = async (req, res) => {
             path: 'service patient addedBy',
           },
         },
-        { path: 'exitsActive', populate: { path: 'author' } }
+        { path: 'exitsActive', populate: { path: 'author' } },
+        { path: 'change', populate: { path: 'addedBy' } }
 
       ]);
 
