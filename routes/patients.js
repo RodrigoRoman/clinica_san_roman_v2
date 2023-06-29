@@ -24,6 +24,9 @@ router.put('/:id/updateDiscount', patients.editDiscountFromAccount)
 
 router.put('/:id/updateMoneyBox', patients.editMoneyBox)
 
+router.put('/:id/updateAllMoneyBox', patients.editAllMoneyBoxes)
+
+
 
 
 //SHOW ROUTE FOR PRODUCTS

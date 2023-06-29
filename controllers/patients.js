@@ -722,7 +722,7 @@ module.exports.addToCart = async (req, res) => {
         addedBy:req.user,
         location:req.body.location,
         terminalDate:termDate,
-        relatedBoxe: box._id
+        relatedBox: box._id
     });
 
     if(service.service_type == "supply"){
@@ -856,6 +856,64 @@ module.exports.editMoneyBox = async (req, res) => {
       }
   
       await transaction.save();
+      await patient.save();
+  
+      return res.send({
+        msg: "True",
+        serviceName: "sini",
+        patientName: patient.name,
+      });
+    } catch (e) {
+      console.log('error');
+      console.log(e);
+      return res.status(500).send({ msg: "Internal server error" });
+    }
+  };
+
+
+  module.exports.editAllMoneyBoxes = async (req, res) => {
+    console.log('inside edit all money box');
+    console.log(req.body);
+    
+    try {
+      const patient = await Patient.findById(req.params.id).populate('servicesCar');
+      const { moneyBox } = req.body; // Assuming the data is sent in the request body
+  
+      // Find all transactions related to the patient
+      const transactions = patient.servicesCar;
+  
+      // Iterate through each transaction and update their relatedBox field
+      for (const trans of transactions) {
+        console.log('the trans')
+        console.log(trans._id.toString())
+        const transaction = await Transaction.findById(trans._id.toString());
+        console.log('the transaction')
+        console.log(transaction)
+        // Remove the transaction from any other box it was related to
+        const previousBoxId = transaction.relatedBox;
+        if (previousBoxId) {
+          const previousBox = await MoneyBox.findById(previousBoxId);
+          if (previousBox) {
+            previousBox.transactionsActive = previousBox.transactionsActive.filter(
+              (transactionId) => transactionId.toString() !== transaction._id.toString()
+            );
+            await previousBox.save();
+            await removeTransactionFromHierarchy(previousBox, transaction);
+          }
+        }
+  
+        // Update the relatedBox field with the new moneyBox value
+        transaction.relatedBox = moneyBox;
+  
+        // Add the transaction to the activeTransactions of the new box
+        const newBox = await MoneyBox.findById(moneyBox);
+        if (newBox) {
+          await addTransactionToHierarchy(newBox, transaction);
+        }
+  
+        await transaction.save();
+      }
+  
       await patient.save();
   
       return res.send({

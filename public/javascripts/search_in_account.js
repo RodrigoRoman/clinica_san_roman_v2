@@ -626,6 +626,11 @@ $(document).ready(function() {
     // This function will be called every time a .custom-select element changes
     moneyBoxUpdate();
   });
+
+  $('#changeAllBoxes').change(function() {
+    // This function will be called every time a .custom-select element changes
+    editAllMoneyBoxes();
+  });
 });
 
 
@@ -705,6 +710,47 @@ function moneyBoxUpdate(event) {
           setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
       }
       });
+};
+
+
+
+
+function editAllMoneyBoxes(event) {
+  console.log('update all money boxes')
+  // send update request
+  $.ajax({
+    type: 'PUT',
+    url: `/patients/${patient_id}/updateAllMoneyBox`,
+    data: {
+      'moneyBox':document.querySelector('#changeAllBoxes').value,
+    },
+    dataType: 'JSON',
+  }).done(function(response){
+    const uniqueStr = Math.random().toString(36).substring(7);
+    if (response.msg === 'True') {
+      let flashMessage = `<div class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
+      Apartado actualizado
+      <button type="button" id = flashMessage${uniqueStr} class="closeAlert" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div> `;
+      $("main").prepend(flashMessage);
+      $("#account-table").fadeOut("fast").load(" #account-table > *").fadeIn('slow');
+      setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
+  }
+  else {
+      // If something goes wrong, alert the error message that our service returned
+      let flashMessage = `<div class="alert alert-danger alert-dismissible fade show fixed-top" role="alert">
+      No se pudo actualizar el apartado
+      <button type="button" id = "flashMessage${uniqueStr}" class="closeAlert" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div> `;
+      $("main").prepend(flashMessage);
+      $("#account-table").fadeOut("fast").load(" #account-table > *").fadeIn('slow');
+      setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
+  }
+  });
 };
 
 

@@ -287,8 +287,14 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
             <button id="printTicketBtn" class="btn btn-outline-info ml-1">
               <i class="fas fa-print"></i>Ticket
             </button>
-      <%}
+      <%}  
     }}%>
+    <select id="changeAllBoxes" class="btn btn-outline-secondary btn-lg custom-select ml-2" name="changeAllBoxes" style="max-width: 300px">
+      <% for (let box of boxes) {
+        %>
+          <option <%= currentUser.moneyBox._id.equals(box._id) ? 'selected' : '' %>  id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
+      <% } %>
+    </select>
     </div>
   </div>
 </div>
