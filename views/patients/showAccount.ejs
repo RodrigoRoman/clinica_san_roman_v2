@@ -36,27 +36,26 @@ let newPatient = patientNoHonorary.concat(honoraries);
         <div class = "toPDF">
             <div class="jumbotron">
                 <div class="container mt-4">
-                    <div class="row justify-content-center ">
+                    <div class="row justify-content-center ml-4 ">
                         <div  class = "col-3"></div>
                         <div class = "col-9">
-
-                            <h6 class = "text-center pt-2 pl-2"> Administracion</h6>
+                            <h6 class = "text-center pt-4 pl-2"> Administracion</h6>
                             <!-- <h3 class = "text-center pl-2">
                                 Clinica San Roman
                             </h3> -->
-                            <p class="text-center text-nowrap pl-2 ">Estado de Cuenta</p>
+                            <p class="text-center text-nowrap pl-2 ">Estado de Cuenta <br> <small class="text-right text-nowrap">Tel: 445 457-12-67 </small>                            </p>
                             <br><br> 
-                            <img src="/imgs/clinica.png" class = "image_print" alt="clinica">
+                            <img src="/imgs/clinica.png" class="image_print" alt="clinica" style="height: 150px;">
                             <!-- <h1 class="display-4"><%=patient[0].patientName%></h1> -->
                         </div>
                     </div>
                     <br>
-                    <div class="row justify-content-between border">
-                        <div class="col-5 reduced">
+                    <div class="row justify-content-between border ">
+                        <div class="col-5 reduced mt-3">
                             <p class = "">Admisión: <%= makeDMY(patient[0].admissionDate)%></p>
                             <p class = "">Paciente: <%= patient[0].patientName%></p>
                         </div>
-                        <div class="col-5 reduced">
+                        <div class="col-5 reduced mt-3">
                             <p class = "">Medico tratante: <%= patient[0].treatingDoctor%></p>
                             <p class = "">Diagnostico: <%= patient[0].diagnosis%></p>
                         </div>

@@ -861,4 +861,45 @@ $('#saveChange').on('click', function() {
 
   // Call the addChangeToBox function with the box ID
   addChangeToBox(boxId);
+  openBox()
 });
+
+  async function openBox(e) { 
+      e.preventDefault();
+
+  serviceUuid = 'e7810a71-73ae-499d-8c15-faa9aef0c3f2';
+ characteristicUuid = 'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f';
+  deviceKey = 'lastUsedDevice'; // Key for storing the device address
+
+
+
+  // Add patient name and services to the ticket body
+  printData1 = new Uint8Array([
+  0x1B, 0x70, 0x00, 0x19, 0xFF //linea para abrir la caja
+  ]);
+
+// var printData = new Uint8Array([...printData1,...printData2]);
+try {
+  //   if(printer){
+  //     device = printer
+  //   }else{
+      device = await navigator.bluetooth.requestDevice({
+        filters: [{ name: 'Printer001' ,deviceId:'OsURHI+3wBk8YoxCAZGClg=='}],
+        optionalServices: [serviceUuid],
+      });
+      printer = device;
+  //   }    
+
+  const server = await device.gatt.connect();
+  const service = await server.getPrimaryService(serviceUuid);
+  const characteristic = await service.getCharacteristic(characteristicUuid);
+  const encoder = new TextEncoder();
+
+  await characteristic.writeValue(printData1);
+  await server.disconnect();
+  this.submit();
+
+} catch (error) {
+  console.error(error);
+}
+}  
