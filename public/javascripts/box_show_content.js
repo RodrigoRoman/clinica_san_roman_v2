@@ -168,9 +168,7 @@ console.log('TRANSACTIONS FROM PRINT TICKET FUNCTION');
    0x0A, // Print a line feed
    0x0A, // Print a line feed
    0x1D, 0x56, 0x41, 0x10,
-//    0x1B, 0x70, 0x00, 0x19, 0xFF //linea para abrir la caja
-
-
+   0x1B, 0x70, 0x00, 0x19, 0xFF //linea para abrir la caja
  ]);
  
  // var printData = new Uint8Array([...printData1,...printData2]);

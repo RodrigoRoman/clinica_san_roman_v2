@@ -4,6 +4,7 @@ const mongoose = require('mongoose'),
       Schema = mongoose.Schema;
 
 
+
 const MoneyBoxSchema = new Schema({
     name: { type: String, required:true },
     dependantMoneyBoxes: [{ type: Schema.Types.ObjectId, ref: 'MoneyBox' }],

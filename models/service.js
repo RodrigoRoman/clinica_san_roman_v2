@@ -31,6 +31,7 @@ const ServiceSchema = new Schema({
   { discriminatorKey: 'type' }
   );
 
+
 // definition of discriminators (subclasses of the main schema)
 const SupplySchema = new Schema({
     service_type: { type: String, default: 'supply' },
@@ -43,6 +44,8 @@ const SupplySchema = new Schema({
     outside : {type: Number, required: true},
     stock : {type: Number, required: true}
   });
+
+  
   
 const HospitalSchema = new Schema({
     service_type: { type: String, default: 'hospital' },

@@ -30,6 +30,16 @@
                 </select> 
             </div>
             <div class="mb-3">
+                <label class="form-label" for="unit">Unidad</label><br>
+                <select name  = "service[unit]"class="btn btn-outline-secondary btn-sm custom-select custom-select-sm mt-1" >
+                    <option selected id= "Procedimiento" value="Procedimiento">Procedimiento</option>
+                    <option selected id= "Uso" value="Uso">Uso</option>
+                    <option id= "Hora" value="Hora">Hora</option>
+                    <option id= "Dia" value="Dia">Dia</option>
+                    <option id= "Dinamico" value="Dinamico">Dinamico</option>
+                </select>
+            </div>
+            <div class="mb-3">
                 <label class="form-label" for="claveSat">Clave del Sat</label>
                 <input class="form-control" type="number" id="claveSat" name="service[claveSat]" value = "<%=service.claveSat%>" required>
             </div>
