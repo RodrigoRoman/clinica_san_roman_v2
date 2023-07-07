@@ -254,8 +254,8 @@ function updateSelectedSuppliesTable() {
         qrCodeContainer.classList.add('qr-code-container');
         new QRCode(qrCodeContainer, {
           text: supply.id,
-          width: 40, // Adjust the size of the QR codes
-          height: 40, // Adjust the size of the QR codes
+          width: 50, // Adjust the size of the QR codes
+          height: 50, // Adjust the size of the QR codes
           correctLevel: QRCode.CorrectLevel.L,
 
         });
