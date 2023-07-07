@@ -41,7 +41,7 @@
 }
 
 .qr-code-container {
-  flex-basis: calc(100% / 20); 
+  flex-basis: calc(100% / 18); 
   box-sizing: border-box;
   padding: 1px;
 }
