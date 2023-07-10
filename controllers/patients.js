@@ -475,7 +475,11 @@ module.exports.patientAccount = async (req, res) => {
          },
          { $project: { fromService: 0 } },
          {$group: {
-            _id: { name:"$name", discount: "$discount" }, // Group by name and discount
+            _id: {
+              name: "$name",
+              discount: "$discount",
+              price: { $ifNull: ["$price", "$sell_price"] }
+            },
             patientName:{$last:"$patientName"},
             class:{$last:"$class"},
             name: {$last:"$name"},
