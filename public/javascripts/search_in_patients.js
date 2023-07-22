@@ -11,6 +11,9 @@ $('#beginDay').click(foundPatients)
 $('#endDay').click(foundPatients)
 $(".apply_dates").on("click",foundPatients);
 
+
+  
+$(document).on('click', '.pagination-button', foundPatients);
 //======== Functions=====
 
 
@@ -44,7 +47,12 @@ function makeHour(dateString) {
 function foundPatients(event) {
     // let currentRequest = null;
     // event.preventDefault();
-    const dat = {'search':$("#search_val").val(),'sorted':$(".custom-select").val(),'begin':$("#beginDate").val(),'end':$("#endDate").val(),page:$(event).attr("alt")};
+    console.log("called")
+    const target = event.target;
+    const alt = $(target).attr("alt");
+    console.log(alt)
+
+    const dat = {'search':$("#search_val").val(),'sorted':$(".custom-select").val(),'begin':$("#beginDate").val(),'end':$("#endDate").val(),page:alt};
     let patientsContent = '';
    $.ajax({
     type: 'GET',
@@ -138,14 +146,14 @@ function foundPatients(event) {
                  let pagination = `<div class="row my-3 pagination customClass">
                  <div class="btn-group float-right" role="group" aria-label="First group">`;
                     if(response.page >1){
-                        pagination += `<a onclick="foundPatients(this)" alt="${response.page-1}" class="btn btn-light " role="button" aria-pressed="true"><i class="fas fa-arrow-circle-left"></i></a>`
+                        pagination += ` <a alt="${response.page-1}" class="btn btn-light pagination-button" role="button" aria-pressed="true"><i class="fas fa-arrow-circle-left"></i></a>`
                     }
                     for(let step = 1; step < response.pages+1; step++) {
                         let act = (step == response.page)?"active":"";
-                        pagination += `<a onclick="foundPatients(this)" alt="${step}" class="btn btn-light ${act}" role="button" aria-pressed="true">${step}</a>`
+                        pagination += `<a alt="${step}" class="btn btn-light ${act} pagination-button" role="button" aria-pressed="true">${step}</a>`
                     }
                     if(response.page+1 <= response.pages){
-                        pagination += `<a onclick="foundPatients(this)" alt="${response.page+1}" class="btn btn-light " role="button" aria-pressed="true"><i class="fas fa-arrow-circle-right"></i></a>`
+                        pagination += `<a alt="${response.page+1}" class="btn btn-light pagination-button" role="button" aria-pressed="true"><i class="fas fa-arrow-circle-right"></i></a>`
                     }
                      pagination += `</div>
                      </div>`
