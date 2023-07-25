@@ -16,7 +16,7 @@
                 <label class="form-label" for="unit">Unidad</label><br>
                 <select name  = "service[unit]" class="btn btn-outline-secondary btn-sm custom-select custom-select-sm mt-1" >
                     <%
-                    var options = ["Procedimiento","Uso", "Hora", "Dia"];
+                    var options = ["Procedimiento","Uso", "Hora", "Dia","Dinamico"];
                     options.forEach((op)=>
                     {
                         if(( service.unit == op )){%>
