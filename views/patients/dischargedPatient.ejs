@@ -101,8 +101,8 @@ let newPatient = patientNoHonorary.concat(honoraries);
                         <tr class = 'reduced'>  
                             <td></td>
                             <td><%=item.serviceName[i]%></td> 
-                            <td><%=Math.round(amnt)%></td>  
-                            <td>$<%=numberCommas(price)%></td>
+                            <td><%=(item.service_unit[0]=='Dinamico')?1:Math.round(amnt)%></td>  
+                            <td>$<%=(item.service_unit[0]=='Dinamico')?amnt:numberCommas(price)%></td>
                             <td><%=discount%>%</td>
                             <td>$<%=numberCommas(item_subtotal)%></td>  
                         </tr> 

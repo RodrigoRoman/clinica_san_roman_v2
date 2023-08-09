@@ -243,10 +243,10 @@ div.row.customClass [class*="col-md"] {
   width: 10%;
 }
 .sticky2 th:nth-child(2),td:nth-child(2) {
-  width: 30%;
+  width: 25%;
 }
 .sticky2 th:nth-child(3),td:nth-child(3) {
-  width: 30%;
+  width: 25%;
 }
 .sticky2 th:nth-child(4),td:nth-child(4) {
   width: 13%;
@@ -255,10 +255,10 @@ div.row.customClass [class*="col-md"] {
 width: 12%;
 }
 .sticky2 th:nth-child(6),td:nth-child(6) {
-  width: 17%;
+  width: 30%;
 }
-.sticky2 th:nth-child(6),td:nth-child(6) {
-  width: 10%;
+.sticky2 th:nth-child(7),td:nth-child(7) {
+  width: 18%;
 }
 
 

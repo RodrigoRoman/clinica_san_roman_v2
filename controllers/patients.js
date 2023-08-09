@@ -208,20 +208,36 @@ module.exports.updatePatient = async (req, res) => {
 
 
 module.exports.updatePayedPatient = async (req, res) => {
-    const { id } = req.params;
-    const patient = await Patient.findById(id).populate({
-        path: 'servicesCar',
-        populate: {
-          path: 'service',
-        },
-      });
-    patient.payed = true;
-    patient.chargedDate = getMexicoCityTime();
-    patient.receivedBy = req.user;
-    patient.totalReceived = req.body.totalCharged;
-    await patient.save();
-    req.flash('success', 'Cuenta cobrada!');
-    res.redirect(`/patients/${patient.id}?redirected=true`)
+  const { id } = req.params;
+  const patient = await Patient.findById(id).populate({
+    path: 'servicesCar',
+    populate: [
+      { path: 'relatedBox', populate: { path: 'dependantMoneyBoxes' } },
+      { path: 'service' },
+    ],
+  });
+  for(transaction of patient.servicesCar){
+    moneyBox = transaction.relatedBox;
+    if(moneyBox.dependantMoneyBoxes.length > 0){
+          for (const dependentBox of moneyBox.dependantMoneyBoxes) {
+              dependentBox.transactionsActive.push(transaction)
+              await dependentBox.save()
+              for (const rootDependantBox of dependentBox.dependantMoneyBoxes) {
+                  rootDependantBox.transactionsActive.push(transaction)
+                  await rootDependantBox.save()
+              }
+          }
+      }
+    moneyBox.transactionsActive.push(transaction);
+    await moneyBox.save()
+} 
+  patient.payed = true;
+  patient.chargedDate = getMexicoCityTime();
+  patient.receivedBy = req.user;
+  patient.totalReceived = req.body.totalCharged;
+  await patient.save();
+  req.flash('success', 'Cuenta cobrada!');
+  res.redirect(`/patients/${patient.id}?redirected=true`);
 }
 
 module.exports.dischargePatient = async (req, res) => {
@@ -276,7 +292,7 @@ module.exports.deletePatient = async (req, res) => {
             path: 'service',
           },
         })
-        if (populatedPatient && populatedPatient.servicesCar) {
+        if(populatedPatient && populatedPatient.servicesCar){
           const servicesCar = populatedPatient.servicesCar;
           for (let serv of servicesCar) {
             console.log('the serice')
@@ -698,18 +714,11 @@ module.exports.searchAll = async (req, res) => {
 module.exports.addToCart = async (req, res) => {
     let timePoint = await Point.findOne({name:"datePoint"});
     const patient = await Patient.findById(req.params.id);
-    const moneyBox = await MoneyBox.findById(req.body.moneyBoxId).populate({
-        path: 'dependantMoneyBoxes',
-        populate: {
-            path: 'dependantMoneyBoxes',
-            populate: {
-                path: 'dependantMoneyBoxes' // and so on...
-            }
-        }
-    });
+    
+    box = await MoneyBox.findById(req.body.moneyBoxId);
+
     var service;
     service = await Service.findById(req.body.service);
-    box = await MoneyBox.findById(req.body.moneyBoxId);
 
     if(!timePoint.resupplying || (service.service_type != 'supply')){
     const timeUnits =  ["Hora", "Dia"];
@@ -744,21 +753,8 @@ module.exports.addToCart = async (req, res) => {
     }
     patient.servicesCar.push(transaction);
     try{
-
-    if(moneyBox.dependantMoneyBoxes.length > 0){
-        for (const dependentBox of moneyBox.dependantMoneyBoxes) {
-            dependentBox.transactionsActive.push(transaction)
-            await dependentBox.save()
-            for (const rootDependantBox of dependentBox.dependantMoneyBoxes) {
-                rootDependantBox.transactionsActive.push(transaction)
-                await rootDependantBox.save()
-            }
-        }
-    }
-    moneyBox.transactionsActive.push(transaction);
     await transaction.save();
     await timePoint.save();
-    await moneyBox.save()
     await patient.save();
     //Remove supply from the inventory
     await service.save();
@@ -843,26 +839,26 @@ module.exports.editMoneyBox = async (req, res) => {
       }
   
       // Remove the transaction from any other box it was related to
-      const previousBoxId = transaction.relatedBox;
-      if (previousBoxId) {
-        const previousBox = await MoneyBox.findById(previousBoxId);
-        if (previousBox) {
-          previousBox.transactionsActive = previousBox.transactionsActive.filter(
-            (transactionId) => transactionId.toString() !== trans_id
-          );
-          await previousBox.save();
-          await removeTransactionFromHierarchy(previousBox, transaction);
-        }
-      }
+      // const previousBoxId = transaction.relatedBox;
+      // if (previousBoxId) {
+      //   const previousBox = await MoneyBox.findById(previousBoxId);
+      //   if (previousBox) {
+      //     previousBox.transactionsActive = previousBox.transactionsActive.filter(
+      //       (transactionId) => transactionId.toString() !== trans_id
+      //     );
+      //     await previousBox.save();
+      //     await removeTransactionFromHierarchy(previousBox, transaction);
+      //   }
+      // }
   
       // Update the relatedBox field with the new moneyBox value
       transaction.relatedBox = moneyBox;
   
       // Add the transaction to the activeTransactions of the new box
       const newBox = await MoneyBox.findById(moneyBox);
-      if (newBox) {
-        await addTransactionToHierarchy(newBox, transaction);
-      }
+      // if (newBox) {
+      //   await addTransactionToHierarchy(newBox, transaction);
+      // }
   
       await transaction.save();
       await patient.save();
@@ -984,8 +980,6 @@ module.exports.updateServiceFromAccount = async (req, res) => {
     const difference = transact.amount - req_amount;
     if(difference<0){
         if(service.service_type == "supply"){
-            
-
             if((service.stock - Math.abs(difference)) < 0 ){
                 return res.send({ msg: "False",serviceName:`${service.name}`});
             }else{

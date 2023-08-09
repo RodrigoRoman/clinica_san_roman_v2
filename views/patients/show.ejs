@@ -218,6 +218,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
           <%}%>
           <th>Modo
           </th>
+          <th>Caja</th>
         </tr>
       </thead>
 
@@ -252,6 +253,15 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
                 <button type="button"  class="delete-item btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
               </div>
             </td> 
+            <td>
+              <select id=`moneyBox<%=item.trans_id%>` class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
+                <% for (let box of boxes) {
+                  %>
+                    <option <%= item.relatedBox._id.equals(box._id) ? 'selected' : '' %>  id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
+                <% } %>
+              </select>
+              
+            </td>
           </tr>
         <%}%>
       </tbody>
@@ -277,18 +287,20 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
         <form class="d-inline" action="/patients/<%=patient._id%>/discharge?_method=PUT" method="POST">
           <button class="btn btn-outline-warning ml-1">Dar de alta</button>
         </form>
-        <%}if(patient.payed == false){%>
-        <form class="d-inline" action="/patients/<%=patient._id%>/pay?_method=PUT" method="POST">
-          <input class="form-control" type="text" id="totalCharged" name="totalCharged" value="<%=total%>" required style="display:none;">
-          <button class="btn btn-outline-danger ml-1">Cobrada <i class="fas fa-dollar-sign"></i></button>
-        </form>
-        <%}else{
-          if (flag) {%>
-            <button id="printTicketBtn" class="btn btn-outline-info ml-1">
-              <i class="fas fa-print"></i>Ticket
-            </button>
-      <%}  
-    }}%>
+        <%}
+      
+  }
+  if(patient.payed == false){%>
+    <form class="d-inline" action="/patients/<%=patient._id%>/pay?_method=PUT" method="POST">
+      <input class="form-control" type="text" id="totalCharged" name="totalCharged" value="<%=total%>" required style="display:none;">
+      <button class="btn btn-outline-danger ml-1">Cobrada <i class="fas fa-dollar-sign"></i></button>
+    </form>
+    <%}else{
+      if (flag) {%>
+        <button id="printTicketBtn" class="btn btn-outline-info ml-1">
+          <i class="fas fa-print"></i>Ticket
+        </button>
+  <%}}%>  
     
     </div>
   </div>
