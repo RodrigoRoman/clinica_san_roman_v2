@@ -48,6 +48,7 @@ module.exports.index = async (req, res) => {
 
 //search for patients with keyword
 module.exports.searchAllPatients = async (req, res) => {
+  console.log('called search all')
     let {search,sorted,begin,end,page} = req.query;
     page = parseInt(page)||1;
     console.log('in here!')
@@ -60,17 +61,9 @@ module.exports.searchAllPatients = async (req, res) => {
             { diagnosis: search },
             { description: search },
         ];
-    console.log('passs end!')
-    console.log(end)
-    console.log('begin!')
-    console.log(begin)
     begin = new Date(begin)
     end = new Date(end)
     let patients = [];
-    console.log('passs end!')
-    console.log(end)
-    console.log('begin!')
-    console.log(begin)
     const skip = resPerPage * (page - 1);
 
     //  = await Patient.find({$or:dbQueries,admissionDate:{$gte:begin,$lte:end}}).limit(resPerPage*3).sort({discharged: 1, admissionDate: -1}).populate("author").populate("receivedBy");

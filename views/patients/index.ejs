@@ -179,7 +179,7 @@ const monthBefore = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(
                                     %>
                                     <li class="list-group-item  border border-danger">Total: $<%=numberCommas(patient.totalReceived)%>. Cobrada por: <%= patient.receivedBy.username%> el  <%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
                                     <%}else{%>
-                                      <li class="list-group-item ">Total: $<%=numberCommas(patient.totalReceived)%>. Cobrada por: <%= patient.receivedBy.name%><%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
+                                      <li class="list-group-item ">Total: $<%=numberCommas(patient.totalReceived)%>. Cobrada por: <%= patient.receivedBy.username%><%= patient.chargedDate.toLocaleDateString('es-US', options)+" a las "+makeHour(patient.chargedDate)%></li>
 
                                       <%}}%>
                                     <li class="list-group-item">Telefono: <%= patient.phone%> </li>

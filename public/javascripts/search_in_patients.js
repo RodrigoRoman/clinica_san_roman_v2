@@ -98,7 +98,7 @@ function foundPatients(event) {
                                 
                                 if (this.payed && (response.currentUser.role == 'directAdmin')) {
                                     if (!this.discharged) {
-                                      patientsContent += `<li class="list-group-item border border-danger">Total:$${this.totalReceived}. Cobrada por: ${this.receivedBy.username} ${new Date(this.chargedDate).toLocaleDateString('es-US', options)}
+                                      patientsContent += `<li class="list-group-item border border-danger">Total:$${this.totalReceived}. Cobrada por: ${this.receivedBy} ${new Date(this.chargedDate).toLocaleDateString('es-US', options)}
                                       ${makeHour(this.chargedDate)} 
                                      
                                        </li>`;
