@@ -48,7 +48,7 @@ module.exports.index = async (req, res) => {
 
 //search for patients with keyword
 module.exports.searchAllPatients = async (req, res) => {
-  console.log('called search all')
+  console.log('')
     let {search,sorted,begin,end,page} = req.query;
     page = parseInt(page)||1;
     console.log('in here!')
@@ -432,6 +432,8 @@ module.exports.showDischargedPatient= async (req, res) => {
         {$addFields:{totalPrice : { $sum: "$price" }}},
         {$addFields:{totalCost : { $sum: "$cost" }}},
     ]).collation({locale:"en", strength: 1});
+    console.log('show discharged');
+    console.log(patient)
     res.render(`patients/dischargedPatient`, {patient});
 }
 
@@ -617,11 +619,11 @@ module.exports.dischAccountPDF = async (req,res) =>{
     
     // await page.goto(`https://pure-brushlands-42473.herokuapp.com/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
     //     waitUntil: 'networkidle0'}); 
-    await page.goto(`https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showDischarged`,{
-        waitUntil: 'networkidle0'});          // go to site
-    // await page.goto(
-    //     `http://localhost:3000/patients/${req.params.id}/showDischarged`,{
-    //       waitUntil: 'networkidle0'});
+    // await page.goto(`https://clinicasanromanv2-production.up.railway.app/patients/${req.params.id}/showDischarged`,{
+    //     waitUntil: 'networkidle0'});          // go to site
+    await page.goto(
+        `http://localhost:3000/patients/${req.params.id}/showDischarged`,{
+          waitUntil: 'networkidle0'});
 
     const dom = await page.$eval('.toPDF', (element) => {
         return element.innerHTML
