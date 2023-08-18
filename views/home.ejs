@@ -39,49 +39,46 @@
             <div class="container my-5">
                 <div class="row">
                     <div class="col-sm-4">
-                        <a href="/patients">
-                            <lottie-player src="/lotties/patients_hosp.json" background="transparent"  speed="1"  style="width: 250px; height: 100px;" loop  autoplay></lottie-player>
+                        <a href="/patients" class="grid-item">
+                            <lottie-player src="/lotties/patients_hosp.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
+                            <p class="text-center">Pacientes</p>
                         </a>
-                        <p class="text-center">Pacientes</p>
                     </div>
                     <% if((currentUser.role == 'directAdmin')||(currentUser.role == 'caja')){%>
                     <div class="col-sm-4">
-                        <a href="/exits/refill">
-                            <lottie-player src="/lotties/consum_list.json" background="transparent"  speed="1"  style="width: 250px; height: 100px;" loop  autoplay></lottie-player>
+                        <a href="/exits/refill" class="grid-item">
+                            <lottie-player src="/lotties/consum_list.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
+                            <p class="text-center">Lista de consumo</p>
                         </a>
-                        <p class="text-center">Lista de consumo</p>
                     </div>
                     <div class="col-sm-4">
-                        <a href="/services/generateQr">
-                            <lottie-player src="/lotties/pagos.json" background="transparent"  speed="1"  style="width: 250px; height: 100px;" loop  autoplay></lottie-player>
+                        <a href="/exits/generateQr" class="grid-item">
+                            <lottie-player src="/lotties/consum_list.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
+                            <p class="text-center">Genrar Qrs</p>
                         </a>
-                        <p class="text-center">Genrar Qrs</p>
                     </div>
                     <%}%>
                     <% if((currentUser.role == 'directAdmin')||(currentUser.role == 'caja')){%>
                         <div class="col-sm-4">
-                            <a href="/services/supply">
-                            <lottie-player src="/lotties/medicine_inventory.json" background="transparent"  speed="1"  style="width: 250px; height: 100px;" loop  autoplay></lottie-player>
-                            </a>
+                            <a href="/services/supply" class="grid-item">
+                            <lottie-player src="/lotties/medicine_inventory.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
                             <p class="text-center">Inventario</p>
+                            </a>
                         </div>
-                    <div class="col-sm-4">
-                        <a href="/services/hospital">
-                            <lottie-player src="/lotties/servicios_medicos.json" background="transparent"  speed="1"  style="width: 250px; height: 100px;" loop  autoplay></lottie-player>
-                        </a>
-                        <p class="text-center">Servicios medicos</p>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="/exits/box">
-                            <lottie-player src="/lotties/money_box.json" background="transparent"  speed="1"  style="width: 250px; height: 100px;" loop  autoplay></lottie-player>
-                        </a>
-                        <p class="text-center">Apartados de dinero</p>
-                    </div>
-
-                    <!-- /generateQ -->
-                    
+                        <div class="col-sm-4">
+                            <a href="/services/hospital" class="grid-item">
+                                <lottie-player src="/lotties/servicios_medicos.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
+                                <p class="text-center">Servicios medicos</p>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a href="/exits/box" class="grid-item">
+                                <lottie-player src="/lotties/money_box.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
+                                <p class="text-center">Apartados de dinero</p>
+                            </a>
+                        </div>
+                        <!-- /generateQ -->
                     <%}%>
-                    
                 </div>
             </div>
             <%}%>

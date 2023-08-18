@@ -113,21 +113,32 @@ let numPatients = await Patient.countDocuments({ $or: dbQueries, admissionDate: 
 module.exports.renderNewForm = (req, res) => {
     res.render("patients/new",{'currentUser':res.locals.currentUser,'serviceType':res.locals.currentUser.serviceType});
 }
+function removeDiacritics(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 
 module.exports.createPatient = async (req, res, next) => {
-    const patient = new Patient(req.body.patient);
-    const nDate = getMexicoCityTime();
-    patient.author = req.user._id;
-    let currUser = await User.findById(req.user._id)
-    console.log('the user')
-    console.log(req.body.patient.serviceType)
-    currUser.serviceType = req.body.patient.serviceType;
-    await currUser.save();
-    patient.admissionDate = nDate;
-    await patient.save();
-    req.flash('success', 'Paciente creado!');
-    res.redirect("/patients")
+  const patient = new Patient(req.body.patient);
+  const nDate = getMexicoCityTime();
+  patient.author = req.user._id;
+
+  // Clean patient name from Spanish accents
+  const cleanedName = removeDiacritics(patient.name);
+  patient.name = cleanedName;
+
+  let currUser = await User.findById(req.user._id);
+  
+  currUser.serviceType = req.body.patient.serviceType;
+  await currUser.save();
+
+  patient.admissionDate = nDate;
+  await patient.save();
+
+  req.flash('success', 'Paciente creado!');
+  res.redirect("/patients");
 }
+
 
 module.exports.createPatientConsultation = async (req, res, next) => {
     const patient = new Patient(req.body.patient);

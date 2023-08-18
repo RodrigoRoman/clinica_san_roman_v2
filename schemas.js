@@ -59,7 +59,7 @@ module.exports.hospitalSchema = Joi.object({
 
 module.exports.patientSchema = Joi.object({
     patient: Joi.object({
-        name: Joi.string().regex(/^[a-zA-Z0-9.,()-+_%*@\u0300-\u036f/%ñ ]*$/, 'Un caracter ingresado no es valido').required().escapeHTML(),
+        name: Joi.string().required().escapeHTML(),
         phone: Joi.number().allow(''),
         cuarto: Joi.string().required(),
         serviceType: Joi.string().required(),
