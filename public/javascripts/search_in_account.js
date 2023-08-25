@@ -104,8 +104,10 @@ async function printTicket() {
 // const { name, servicesCar } = JSON.parse(pat);
 const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-patName = JSON.parse(pat).name;
-servicesCar = JSON.parse(pat).servicesCar;
+patName = JSON.parse(pat).name  
+;
+servicesCar = JSON.parse(pat).servicesCar  
+;
 const servicesText = await Promise.all(servicesCar.map(async service => {
   console.log('the service inside ticket')
   console.log(service)

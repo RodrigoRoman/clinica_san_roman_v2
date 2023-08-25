@@ -114,7 +114,8 @@ module.exports.renderNewForm = (req, res) => {
     res.render("patients/new",{'currentUser':res.locals.currentUser,'serviceType':res.locals.currentUser.serviceType});
 }
 function removeDiacritics(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\x00-\x1F\x7F-\x9F]/g, "")  // Remove control characters
+  .replace(/[\u2028\u2029]/g, " ");
 }
 
 
