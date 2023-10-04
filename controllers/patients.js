@@ -900,20 +900,20 @@ module.exports.editMoneyBox = async (req, res) => {
         console.log('the trans')
         console.log(trans._id.toString())
         const transaction = await Transaction.findById(trans._id.toString());
-        console.log('the transaction')
-        console.log(transaction)
-        // Remove the transaction from any other box it was related to
-        const previousBoxId = transaction.relatedBox;
-        if (previousBoxId) {
-          const previousBox = await MoneyBox.findById(previousBoxId);
-          if (previousBox) {
-            previousBox.transactionsActive = previousBox.transactionsActive.filter(
-              (transactionId) => transactionId.toString() !== transaction._id.toString()
-            );
-            await previousBox.save();
-            await removeTransactionFromHierarchy(previousBox, transaction);
-          }
-        }
+        // console.log('the transaction')
+        // console.log(transaction)
+        // // Remove the transaction from any other box it was related to
+        // const previousBoxId = transaction.relatedBox;
+        // if (previousBoxId) {
+        //   const previousBox = await MoneyBox.findById(previousBoxId);
+        //   if (previousBox) {
+        //     previousBox.transactionsActive = previousBox.transactionsActive.filter(
+        //       (transactionId) => transactionId.toString() !== transaction._id.toString()
+        //     );
+        //     await previousBox.save();
+        //     await removeTransactionFromHierarchy(previousBox, transaction);
+        //   }
+        // }
   
         // Update the relatedBox field with the new moneyBox value
         transaction.relatedBox = moneyBox;
