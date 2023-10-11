@@ -493,7 +493,7 @@ module.exports.searchAllServices = async (req, res) => {
     sorted = req.query.sorted;
    
     const page = parseInt(req.query.page) || 1;
-    const resPerPage = 40;
+    const resPerPage = 100;
     search = new RegExp(escapeRegExp(search), 'gi');
     let dbQueries =  [
         { name: search},

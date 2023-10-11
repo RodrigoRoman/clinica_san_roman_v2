@@ -65,8 +65,10 @@ function truncate(str, n){
 
  function foundServices(event) {
     let currentRequest = null;
+    const page = $(event.target).attr('data-page');
+
     // event.preventDefault();
-    const dat = {'search':$("#search_val").val(),'sorted':$(".custom-select").val(),'page':$(event).attr("alt")};
+    const dat = {'search':$("#search_val").val(),'sorted':$(".custom-select").val(),'page':page};
     let servicesContent = '';
    $.ajax({
     type: 'GET',
@@ -143,20 +145,40 @@ function truncate(str, n){
             
                  });
                  servicesContent+=`</div>`
-                 let pagination = `<div class="row my-3 pagination customClass">
-                 <div class="btn-group float-right" role="group" aria-label="First group">`;
-                    if(response.page >1){
-                        pagination += `<a onclick="foundServices(this)" alt="${response.page-1}" class="btn btn-light " role="button" aria-pressed="true"><i class="fas fa-arrow-circle-left"></i></a>`
-                    }
-                    for(let step = 1; step < response.pages+1; step++) {
-                        let act = (step == response.page)?"active":"";
-                        pagination += `<a onclick="foundServices(this)" alt="${step}" class="btn btn-light ${act}" role="button" aria-pressed="true">${step}</a>`
-                    }
-                    if(response.page+1 <= response.pages){
-                        pagination += `<a onclick="foundServices(this)" alt="${response.page+1}" class="btn btn-light " role="button" aria-pressed="true"><i class="fas fa-arrow-circle-right"></i></a>`
-                    }
-                     pagination += `</div>
-                     </div>`
+                //  let pagination = `<div class="row my-3 pagination customClass">
+                //  <div class="btn-group float-right" role="group" aria-label="First group">`;
+                //     if(response.page >1){
+                //         pagination += `<a onclick="foundServices(this)" alt="${response.page-1}" class="btn btn-light " role="button" aria-pressed="true"><i class="fas fa-arrow-circle-left"></i></a>`
+                //     }
+                //     for(let step = 1; step < response.pages+1; step++) {
+                //         let act = (step == response.page)?"active":"";
+                //         pagination += `<a onclick="foundServices(this)" alt="${step}" class="btn btn-light ${act}" role="button" aria-pressed="true">${step}</a>`
+                //     }
+                //     if(response.page+1 <= response.pages){
+                //         pagination += `<a onclick="foundServices(this)" alt="${response.page+1}" class="btn btn-light " role="button" aria-pressed="true"><i class="fas fa-arrow-circle-right"></i></a>`
+                //     }
+                //      pagination += `</div>
+                //      </div>`
+
+                     let pagination = `<div class="row my-3 pagination customClass">
+                     <div class="btn-group float-right" role="group" aria-label="First group">`;
+    
+                   if (response.page > 1) {
+                     pagination += `<a data-page="${response.page - 1}" class="btn btn-light pagination-button-normal" role="button" aria-pressed="true"><i class="fas fa-arrow-circle-left"></i></a>`;
+                   }
+    
+                   for (let step = 1; step < response.pages + 1; step++) {
+                     let act = (step == response.page) ? "active" : "";
+                     pagination += `<a data-page="${step}" class="btn btn-light pagination-button-normal ${act}" role="button" aria-pressed="true">${step}</a>`;
+                   }
+    
+                   if (response.page + 1 <= response.pages) {
+                     pagination += `<a data-page="${response.page + 1}" class="btn btn-light pagination-button-normal" role="button" aria-pressed="true"><i class="fas fa-arrow-circle-right"></i></a>`;
+                   }
+    
+                   pagination += `</div>
+                     </div>`;
+
                  $('.services').html( servicesContent);  
                  $('.pagination').replaceWith( pagination); 
                  $("selector").find('option[value="'+response.sorted+'"]').attr('selected','selected')
@@ -164,3 +186,5 @@ function truncate(str, n){
      
    });
  };
+
+ $(document).on('click', '.pagination-button-normal', foundServices);
