@@ -196,7 +196,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
     </table>
     <br>
     <br>
-    <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin"|| (currDate.getHours()<6 || currDate.getHours()>19)){%>
+    <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin"){%>
     <h1 class="text-center display-5"><i class="fas fa-hourglass-start"></i></h1>
     <table id="accountStatus" class="table table-responsive-sm sticky2">
       <thead>
@@ -268,7 +268,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
     </table>
     <%}
     %>
-    <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin" || (currentUser.role == "caja")||(currentUser.role == "medico" ||currentUser.role == "nurse")){%>
+    <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin" || (currentUser.role == "caja")||(currentUser.role == "medico")){%>
       <div class="container ">
         <%total = +(total).toFixed(2)%>
         <h2 class = "float-right font-italic border border-secondary rounded"><span class = "mx-2 my-2">Total: $<%=numberCommas(total)%></span></h2>
